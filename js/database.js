@@ -30,3 +30,7 @@ function setupDatabase() {
 export function runQuery(query) {
     return db.exec(query);
 }
+
+export function getSchemaInfo() {
+    return db.exec("SELECT name, sql FROM sqlite_master WHERE type='table'");
+}

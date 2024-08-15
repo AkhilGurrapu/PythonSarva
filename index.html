@@ -9,33 +9,48 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="left-column">
-            <h2>SQL Concepts</h2>
-            <div class="concept-slider">
-                <button id="prev-concept" class="slider-btn"><i class="fas fa-arrow-left"></i></button>
-                <div id="current-concept">SELECT Statements</div>
-                <button id="next-concept" class="slider-btn"><i class="fas fa-arrow-right"></i></button>
-            </div>
-            <div id="concept-content"></div>
+    <header>
+        <button id="toggle-topics" class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        <div class="logo">
+            <i class="fas fa-database"></i> SQL Learner
         </div>
-        <div class="right-column">
-            <div class="top-bar">
-                <select id="schema-select">
-                    <!-- Database schemas will be added here -->
-                </select>
-                <button id="preview-schema">Preview Schema</button>
+        <button id="preview-schema" class="sidebar-toggle"><i class="fas fa-table"></i></button>
+    </header>
+
+    <div class="sidebar left-sidebar" id="topics-sidebar">
+        <h2>SQL Topics</h2>
+        <ul id="topic-list">
+            <!-- SQL topics will be dynamically added here -->
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="left-column">
+                <h2>SQL Concepts</h2>
+                <div class="concept-slider">
+                    <button id="prev-concept" class="slider-btn"><i class="fas fa-arrow-left"></i></button>
+                    <div id="current-concept">SELECT Statements</div>
+                    <button id="next-concept" class="slider-btn"><i class="fas fa-arrow-right"></i></button>
+                </div>
+                <div id="concept-content"></div>
             </div>
-            <textarea id="sql-editor" placeholder="Write your SQL query here..."></textarea>
-            <button id="run-query">Run Query</button>
-            <div id="output-area"></div>
+            <div class="right-column">
+                <textarea id="sql-editor" placeholder="Write your SQL query here..."></textarea>
+                <button id="run-query">Run Query</button>
+                <div id="output-area"></div>
+            </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-    <script src="js/main.js" type="module"></script>
+
+    <div class="sidebar right-sidebar" id="schema-sidebar">
+        <h2>Database Schema</h2>
+        <div id="schema-content"></div>
+    </div>
+
     <script src="js/concepts.js" type="module"></script>
     <script src="js/database.js" type="module"></script>
     <script src="js/main.js" type="module"></script>
-    
+    <script src="js/layout.js"></script>
 </body>
 </html>
