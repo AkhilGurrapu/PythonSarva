@@ -92,15 +92,15 @@ function formatResultAsTable(result) {
     let tableHtml = '<table class="result-table"><thead><tr>';
     
     // Add table headers
-    Object.keys(result[0]).forEach(column => {
+    result[0].columns.forEach(column => {
         tableHtml += `<th>${column}</th>`;
     });
     tableHtml += '</tr></thead><tbody>';
 
     // Add table rows
-    result.forEach(row => {
+    result[0].values.forEach(row => {
         tableHtml += '<tr>';
-        Object.values(row).forEach(cell => {
+        row.forEach(cell => {
             tableHtml += `<td>${cell !== null ? cell : 'NULL'}</td>`;
         });
         tableHtml += '</tr>';
@@ -109,3 +109,4 @@ function formatResultAsTable(result) {
     tableHtml += '</tbody></table>';
     return tableHtml;
 }
+
