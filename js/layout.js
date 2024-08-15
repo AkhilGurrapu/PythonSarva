@@ -1,44 +1,42 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const container = document.getElementById('resizable-container');
-    const divider = document.getElementById('divider');
-    const conceptsSection = document.getElementById('concepts-section');
-    const codeSection = document.getElementById('code-section');
+    const container = document.querySelector('.container');
+    const leftColumn = document.querySelector('.left-column');
+    const rightColumn = document.querySelector('.right-column');
+    const resizer = document.getElementById('resizer');
 
-    let isDragging = false;
+    let isResizing = false;
 
-    divider.addEventListener('mousedown', function(e) {
-        isDragging = true;
-        e.preventDefault();
+    // Set initial widths
+    setColumnWidths(60);
+
+    resizer.addEventListener('mousedown', function(e) {
+        isResizing = true;
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', stopResizing);
     });
 
-    document.addEventListener('mousemove', function(e) {
-        if (!isDragging) return;
+    function handleMouseMove(e) {
+        if (!isResizing) return;
 
         const containerRect = container.getBoundingClientRect();
-        const newPosition = e.clientX - containerRect.left;
-        
-        const minWidth = 200; // Minimum width for each section
-        if (newPosition > minWidth && containerRect.width - newPosition > minWidth) {
-            conceptsSection.style.flexBasis = `${newPosition}px`;
-            codeSection.style.flexBasis = `${containerRect.width - newPosition}px`;
-        }
-    });
+        let newLeftWidth = e.clientX - containerRect.left;
+        let leftPercentage = (newLeftWidth / containerRect.width) * 100;
 
-    document.addEventListener('mouseup', function() {
-        isDragging = false;
-    });
+        // Ensure minimum width for both columns
+        if (leftPercentage < 20) leftPercentage = 20;
+        if (leftPercentage > 80) leftPercentage = 80;
 
-    // Sidebar toggle functionality
-    const toggleTopicsBtn = document.getElementById('toggle-topics');
-    const topicsSidebar = document.getElementById('topics-sidebar');
-    const previewSchemaBtn = document.getElementById('preview-schema');
-    const schemaSidebar = document.getElementById('schema-sidebar');
+        setColumnWidths(leftPercentage);
+    }
 
-    toggleTopicsBtn.addEventListener('click', () => {
-        topicsSidebar.classList.toggle('active');
-    });
+    function stopResizing() {
+        isResizing = false;
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', stopResizing);
+    }
 
-    previewSchemaBtn.addEventListener('click', () => {
-        schemaSidebar.classList.toggle('active');
-    });
+    function setColumnWidths(leftPercentage) {
+        leftColumn.style.width = `${leftPercentage}%`;
+        rightColumn.style.width = `${100 - leftPercentage}%`;
+    }
 });

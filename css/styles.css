@@ -201,7 +201,35 @@ header {
 
 
 
+/* Update the existing .container style or add it if it doesn't exist */
+.container {
+    display: flex;
+    height: calc(100vh - 60px);
+}
 
+/* Update the styles for .left-column and .right-column */
+.left-column {
+    width: 60%;
+    min-width: 200px;
+    overflow-y: auto;
+}
+
+.right-column {
+    width: 40%;
+    min-width: 200px;
+    overflow-y: auto;
+}
+
+#resizer {
+    width: 10px;
+    background-color: #0f3460;
+    cursor: col-resize;
+    transition: background-color 0.3s ease;
+}
+
+#resizer:hover {
+    background-color: #1a5f9c;
+}
 
 
 

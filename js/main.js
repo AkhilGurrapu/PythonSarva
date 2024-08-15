@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     prevBtn.addEventListener('click', () => navigateConcept(-1));
     nextBtn.addEventListener('click', () => navigateConcept(1));
     runQueryBtn.addEventListener('click', handleRunQuery);
+    
+    // Add event listeners for sidebar toggles
     toggleTopicsBtn.addEventListener('click', toggleTopicsSidebar);
     previewSchemaBtn.addEventListener('click', toggleSchemaSidebar);
 
     populateTopicList(selectTopic);
     showConcept(currentConceptIndex);
-
-    
 });
 
 function selectTopic(index) {
@@ -52,6 +52,18 @@ async function updateSchemaContent() {
 function formatSchemaInfo(schemaInfo) {
     // Implement this function to format the schema info as HTML
     // You can create a table or list to display table names and their columns
+    let html = '<ul>';
+    for (const table in schemaInfo) {
+        html += `<li>${table}
+            <ul>`;
+        schemaInfo[table].forEach(column => {
+            html += `<li>${column.name} (${column.type})</li>`;
+        });
+        html += `</ul>
+        </li>`;
+    }
+    html += '</ul>';
+    return html;
 }
 
 function navigateConcept(direction) {
@@ -71,6 +83,7 @@ async function handleRunQuery() {
         outputArea.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
     }
 }
+
 function formatResultAsTable(result) {
     if (result.length === 0) {
         return '<p>Query executed successfully, but returned no results.</p>';
@@ -79,15 +92,15 @@ function formatResultAsTable(result) {
     let tableHtml = '<table class="result-table"><thead><tr>';
     
     // Add table headers
-    result[0].columns.forEach(column => {
+    Object.keys(result[0]).forEach(column => {
         tableHtml += `<th>${column}</th>`;
     });
     tableHtml += '</tr></thead><tbody>';
 
     // Add table rows
-    result[0].values.forEach(row => {
+    result.forEach(row => {
         tableHtml += '<tr>';
-        row.forEach(cell => {
+        Object.values(row).forEach(cell => {
             tableHtml += `<td>${cell !== null ? cell : 'NULL'}</td>`;
         });
         tableHtml += '</tr>';
