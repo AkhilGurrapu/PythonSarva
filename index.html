@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Learning Platform</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="left-column">
+            <h2>SQL Concepts</h2>
+            <div class="concept-slider">
+                <button id="prev-concept" class="slider-btn"><i class="fas fa-arrow-left"></i></button>
+                <div id="current-concept">SELECT Statements</div>
+                <button id="next-concept" class="slider-btn"><i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div id="concept-content"></div>
+        </div>
+        <div class="right-column">
+            <div class="top-bar">
+                <select id="schema-select">
+                    <!-- Database schemas will be added here -->
+                </select>
+                <button id="preview-schema">Preview Schema</button>
+            </div>
+            <textarea id="sql-editor" placeholder="Write your SQL query here..."></textarea>
+            <button id="run-query">Run Query</button>
+            <div id="output-area"></div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="js/main.js" type="module"></script>
+    <script src="js/concepts.js" type="module"></script>
+    <script src="js/database.js" type="module"></script>
+    <script src="js/main.js" type="module"></script>
+    
+</body>
+</html>
