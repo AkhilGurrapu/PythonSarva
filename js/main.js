@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const prevBtn = document.getElementById('prev-concept');
     const nextBtn = document.getElementById('next-concept');
+    const topicList = document.getElementById('topic-list');
     const runQueryBtn = document.getElementById('run-query');
     const toggleTopicsBtn = document.getElementById('toggle-topics');
     const previewSchemaBtn = document.getElementById('preview-schema');
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     prevBtn.addEventListener('click', () => navigateConcept(-1));
     nextBtn.addEventListener('click', () => navigateConcept(1));
+    topicList.addEventListener('click', selectTopic);
     runQueryBtn.addEventListener('click', handleRunQuery);
     
     toggleTopicsBtn.addEventListener('click', toggleTopicsSidebar);
@@ -51,6 +53,7 @@ function selectTopic(index) {
     currentConceptIndex = index;
     showConcept(currentConceptIndex);
     toggleTopicsSidebar();
+    resetOutputArea();
 }
 
 
