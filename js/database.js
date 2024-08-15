@@ -32,5 +32,19 @@ export function runQuery(query) {
 }
 
 export function getSchemaInfo() {
-    return db.exec("SELECT name, sql FROM sqlite_master WHERE type='table'");
+    const tables = db.exec("SELECT name FROM sqlite_master WHERE type='table'");
+    const schema = {};
+
+    tables[0].values.forEach(([tableName]) => {
+        const tableInfo = db.exec(`PRAGMA table_info(${tableName})`);
+        schema[tableName] = tableInfo[0].values.map(column => ({
+            name: column[1],
+            type: column[2],
+            notNull: column[3] === 1,
+            primaryKey: column[5] === 1
+        }));
+    });
+
+    return schema;
 }
+

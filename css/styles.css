@@ -10,7 +10,7 @@ body {
 
 header {
     background-color: #0f3460;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -18,11 +18,17 @@ header {
     width: 100%;
     top: 0;
     z-index: 1000;
+    box-sizing: border-box;
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
 }
 
 .sidebar-toggle {
@@ -31,6 +37,8 @@ header {
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
+    padding: 0.5rem;
+    margin-left: 0.5rem;
 }
 
 .sidebar {
@@ -42,6 +50,7 @@ header {
     padding: 1rem;
     overflow-y: auto;
     transition: transform 0.3s ease-in-out;
+    z-index: 100;
 }
 
 .left-sidebar {
@@ -61,6 +70,7 @@ header {
 .main-content {
     margin-top: 60px;
     transition: margin 0.3s ease-in-out;
+    padding-right: 10px;
 }
 
 /* Rest of your existing CSS for .container, .left-column, .right-column, etc. */
@@ -85,11 +95,125 @@ header {
 /* Add any additional styles you need for the schema sidebar */
 
 
+/* Additional styles for the schema sidebar */
+.schema-info {
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+}
+
+.table-info {
+    margin-bottom: 20px;
+    background-color: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-name {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 10px;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.column-info {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.column-info th,
+.column-info td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #34495e;
+}
+
+.column-info th {
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+.column-info tr:nth-child(even) {
+    background-color: #243447;
+}
+
+.column-info tr:hover {
+    background-color: #2c3e50;
+}
+
+/* Scrollbar styles for WebKit browsers */
+#schema-sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+#schema-sidebar::-webkit-scrollbar-track {
+    background: #16213e;
+}
+
+#schema-sidebar::-webkit-scrollbar-thumb {
+    background-color: #0f3460;
+    border-radius: 4px;
+}
+
+#schema-sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #1a5f9c;
+}
+
+
+/* Add these new styles to your existing CSS file */
+
+#schema-content .table-name {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 10px;
+    margin: 10px 0 5px 0;
+    border-radius: 5px;
+}
+
+#schema-content ul {
+    list-style-type: none;
+    padding-left: 10px;
+    margin: 0 0 15px 0;
+}
+
+#schema-content li {
+    padding: 5px;
+    border-bottom: 1px solid #34495e;
+}
+
+#schema-content .column-name {
+    font-weight: bold;
+    color: #3498db;
+}
+
+#schema-content .column-type {
+    color: #2ecc71;
+    margin-left: 10px;
+}
+
+#schema-content .not-null {
+    color: #e74c3c;
+    margin-left: 10px;
+    font-style: italic;
+}
+
+#schema-content .primary-key-indicator {
+    background-color: #f39c12;
+    color: #fff;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+/* Existing scrollbar styles can remain unchanged */
+
+
 
 
 .container {
     display: flex;
-    height: 100vh;
+    height: calc(100vh - 60px);
 }
 
 .left-column, .right-column {
@@ -98,13 +222,27 @@ header {
 }
 
 .left-column {
-    width: 40%;
+    width: 60%;
+    min-width: 200px;
     background-color: #16213e;
 }
 
 .right-column {
-    width: 60%;
+    width: 40%;
+    min-width: 200px;
 }
+
+#resizer {
+    width: 10px;
+    background-color: #0f3460;
+    cursor: col-resize;
+    transition: background-color 0.3s ease;
+}
+
+#resizer:hover {
+    background-color: #1a5f9c;
+}
+
 
 .concept-slider {
     display: flex;
@@ -201,35 +339,20 @@ header {
 
 
 
-/* Update the existing .container style or add it if it doesn't exist */
-.container {
-    display: flex;
-    height: calc(100vh - 60px);
+
+/* Add styles for the overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 50;
 }
 
-/* Update the styles for .left-column and .right-column */
-.left-column {
-    width: 60%;
-    min-width: 200px;
-    overflow-y: auto;
+.overlay.active {
+    display: block;
 }
-
-.right-column {
-    width: 40%;
-    min-width: 200px;
-    overflow-y: auto;
-}
-
-#resizer {
-    width: 10px;
-    background-color: #0f3460;
-    cursor: col-resize;
-    transition: background-color 0.3s ease;
-}
-
-#resizer:hover {
-    background-color: #1a5f9c;
-}
-
-
-
+/* overlay content */

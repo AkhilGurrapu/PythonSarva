@@ -6,18 +6,6 @@ export const selectStatements = {
         <h4>Basic Syntax:</h4>
         <pre>SELECT column1, column2, ... FROM table_name;</pre>
         <p>This will select specified columns from the table.</p>
-        
-        <h4>Interactive Example:</h4>
-        <div class="interactive-example">
-            <p>Try selecting different columns from the users table:</p>
-            <select id="column-selector" multiple>
-                <option value="id">id</option>
-                <option value="name">name</option>
-                <option value="age">age</option>
-            </select>
-            <button onclick="generateQuery()">Generate Query</button>
-            <pre id="generated-query"></pre>
-        </div>
 
         <h4>Advanced Usage:</h4>
         <ul>

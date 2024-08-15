@@ -11,37 +11,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     const runQueryBtn = document.getElementById('run-query');
     const toggleTopicsBtn = document.getElementById('toggle-topics');
     const previewSchemaBtn = document.getElementById('preview-schema');
+    const overlay = document.querySelector('.overlay');
 
     prevBtn.addEventListener('click', () => navigateConcept(-1));
     nextBtn.addEventListener('click', () => navigateConcept(1));
     runQueryBtn.addEventListener('click', handleRunQuery);
     
-    // Add event listeners for sidebar toggles
     toggleTopicsBtn.addEventListener('click', toggleTopicsSidebar);
     previewSchemaBtn.addEventListener('click', toggleSchemaSidebar);
+    overlay.addEventListener('click', closeSidebars);
 
     populateTopicList(selectTopic);
     showConcept(currentConceptIndex);
 });
 
+function toggleTopicsSidebar() {
+    const sidebar = document.getElementById('topics-sidebar');
+    sidebar.classList.toggle('active');
+    document.querySelector('.overlay').classList.toggle('active');
+}
+
+function toggleSchemaSidebar() {
+    const sidebar = document.getElementById('schema-sidebar');
+    sidebar.classList.toggle('active');
+    document.querySelector('.overlay').classList.toggle('active');
+    if (sidebar.classList.contains('active')) {
+        updateSchemaContent();
+    }
+}
+
+function closeSidebars() {
+    const sidebars = document.querySelectorAll('.sidebar');
+    sidebars.forEach(sidebar => sidebar.classList.remove('active'));
+    document.querySelector('.overlay').classList.remove('active');
+}
+
+// Rest of your existing JavaScript
 function selectTopic(index) {
     currentConceptIndex = index;
     showConcept(currentConceptIndex);
     toggleTopicsSidebar();
 }
 
-function toggleTopicsSidebar() {
-    const sidebar = document.getElementById('topics-sidebar');
-    sidebar.classList.toggle('active');
-}
 
-function toggleSchemaSidebar() {
-    const sidebar = document.getElementById('schema-sidebar');
-    sidebar.classList.toggle('active');
-    if (sidebar.classList.contains('active')) {
-        updateSchemaContent();
-    }
-}
 
 async function updateSchemaContent() {
     const schemaContent = document.getElementById('schema-content');
@@ -50,25 +62,36 @@ async function updateSchemaContent() {
 }
 
 function formatSchemaInfo(schemaInfo) {
-    // Implement this function to format the schema info as HTML
-    // You can create a table or list to display table names and their columns
-    let html = '<ul>';
-    for (const table in schemaInfo) {
-        html += `<li>${table}
-            <ul>`;
-        schemaInfo[table].forEach(column => {
-            html += `<li>${column.name} (${column.type})</li>`;
+    let html = '';
+    for (const tableName in schemaInfo) {
+        html += `<h3 class="table-name">${tableName}</h3><ul>`;
+        schemaInfo[tableName].forEach(column => {
+            let columnClass = 'column-name';
+            if (column.primaryKey) columnClass += ' primary-key';
+            
+            html += `<li>
+                <span class="${columnClass}">${column.name}</span>
+                <span class="column-type">${column.type}</span>
+                ${column.notNull ? '<span class="not-null">NOT NULL</span>' : ''}
+                ${column.primaryKey ? '<span class="primary-key-indicator">PK</span>' : ''}
+            </li>`;
         });
-        html += `</ul>
-        </li>`;
+        html += '</ul>';
     }
-    html += '</ul>';
     return html;
 }
 
 function navigateConcept(direction) {
     currentConceptIndex = (currentConceptIndex + direction + concepts.length) % concepts.length;
     showConcept(currentConceptIndex);
+    resetOutputArea(); // Add this line to reset the output area
+}
+
+function resetOutputArea() {
+    const outputArea = document.getElementById('output-area');
+    outputArea.innerHTML = ''; // Clear the output area
+    const sqlEditor = document.getElementById('sql-editor');
+    sqlEditor.value = concepts[currentConceptIndex].practice || ''; // Reset SQL editor to the practice query of the current concept
 }
 
 async function handleRunQuery() {
@@ -109,4 +132,7 @@ function formatResultAsTable(result) {
     tableHtml += '</tbody></table>';
     return tableHtml;
 }
+
+
+
 
