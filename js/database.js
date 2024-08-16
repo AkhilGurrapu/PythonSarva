@@ -85,23 +85,6 @@ function setupDatabase() {
             status TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id)
         );
-        INSERT INTO orders (user_id, order_date, total_amount, status) VALUES 
-            (1, '2023-06-01', 1019.98, 'Completed'),
-            (2, '2023-06-15', 634.98, 'Shipped'),
-            (3, '2023-07-01', 124.97, 'Processing'),
-            (4, '2023-07-10', 599.99, 'Completed'),
-            (5, '2023-07-20', 54.98, 'Shipped');
-        
-        -- Order_Items table
-        CREATE TABLE order_items (
-            id INTEGER PRIMARY KEY,
-            order_id INTEGER,
-            product_id INTEGER,
-            quantity INTEGER,
-            price REAL,
-            FOREIGN KEY (order_id) REFERENCES orders(id),
-            FOREIGN KEY (product_id) REFERENCES products(id)
-        );
        INSERT INTO orders (user_id, order_date, total_amount, status) VALUES 
             (1, '2023-06-01', 1019.98, 'Completed'),
             (2, '2023-06-15', 634.98, 'Shipped'),

@@ -46,7 +46,18 @@
     <div class="overlay"></div>
     <div class="sidebar right-sidebar" id="schema-sidebar">
         <h2>Database Schema</h2>
+        <button id="preview-erd" class="erd-button" title="View Entity-Relationship Diagram">Model View</button>
         <div id="schema-content"></div>
+    </div>
+
+    <div id="data-model-sidebar" class="sidebar right-sidebar">
+        <div class="sidebar-header">
+            <h2>Entity-Relationship Diagram</h2>
+            <button id="close-erd" class="close-button">&times;</button>
+        </div>
+        <div id="data-model-content">
+            <!-- We'll add the SVG for the data model here -->
+        </div>
     </div>
 
     <script src="js/concepts.js" type="module"></script>

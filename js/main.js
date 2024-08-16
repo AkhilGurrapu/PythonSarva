@@ -1,5 +1,7 @@
 import { initializeDB, runQuery, getSchemaInfo } from './database.js';
 import { concepts, showConcept, populateTopicList } from './concepts.js';
+import { initERD } from './erd.js';
+
 
 let currentConceptIndex = 0;
 
@@ -25,6 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     populateTopicList(selectTopic);
     showConcept(currentConceptIndex);
+    // Initialize ERD functionality
+    initERD();
 });
 
 function toggleTopicsSidebar() {
@@ -33,19 +37,37 @@ function toggleTopicsSidebar() {
     document.querySelector('.overlay').classList.toggle('active');
 }
 
+
 function toggleSchemaSidebar() {
-    const sidebar = document.getElementById('schema-sidebar');
-    sidebar.classList.toggle('active');
-    document.querySelector('.overlay').classList.toggle('active');
-    if (sidebar.classList.contains('active')) {
+    const schemaSidebar = document.getElementById('schema-sidebar');
+    const erdSidebar = document.getElementById('data-model-sidebar');
+    const overlay = document.querySelector('.overlay');
+
+    // If schema sidebar is not active, activate it and deactivate ERD sidebar
+    if (!schemaSidebar.classList.contains('active')) {
+        schemaSidebar.classList.add('active');
+        erdSidebar.classList.remove('active');
+        overlay.classList.add('active');
         updateSchemaContent();
+    } else {
+        // If schema sidebar is already active, just close it
+        schemaSidebar.classList.remove('active');
+        overlay.classList.remove('active');
     }
+
+    // Ensure the overlay click event is properly set up
+    overlay.removeEventListener('click', closeSidebars);
+    overlay.addEventListener('click', closeSidebars);
 }
 
 function closeSidebars() {
-    const sidebars = document.querySelectorAll('.sidebar');
-    sidebars.forEach(sidebar => sidebar.classList.remove('active'));
-    document.querySelector('.overlay').classList.remove('active');
+    const schemaSidebar = document.getElementById('schema-sidebar');
+    const erdSidebar = document.getElementById('data-model-sidebar');
+    const overlay = document.querySelector('.overlay');
+
+    schemaSidebar.classList.remove('active');
+    erdSidebar.classList.remove('active');
+    overlay.classList.remove('active');
 }
 
 // Rest of your existing JavaScript
