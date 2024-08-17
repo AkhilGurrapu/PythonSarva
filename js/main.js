@@ -2,17 +2,14 @@ import { initializeDB, runQuery, getSchemaInfo } from './database.js';
 import { concepts, showConcept, populateTopicList } from './concepts.js';
 import { initERD } from './erd.js';
 
-
 let currentConceptIndex = 0;
 let sqlEditor;
-
 
 document.addEventListener('DOMContentLoaded', async () => {
     await initializeDB();
     
     const prevBtn = document.getElementById('prev-concept');
     const nextBtn = document.getElementById('next-concept');
-    const topicList = document.getElementById('topic-list');
     const runQueryBtn = document.getElementById('run-query');
     const toggleTopicsBtn = document.getElementById('toggle-topics');
     const previewSchemaBtn = document.getElementById('preview-schema');
@@ -20,13 +17,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     prevBtn.addEventListener('click', () => navigateConcept(-1));
     nextBtn.addEventListener('click', () => navigateConcept(1));
-    topicList.addEventListener('click', selectTopic);
     runQueryBtn.addEventListener('click', handleRunQuery);
     
     toggleTopicsBtn.addEventListener('click', toggleTopicsSidebar);
     previewSchemaBtn.addEventListener('click', toggleSchemaSidebar);
     overlay.addEventListener('click', closeSidebars);
-
 
     sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
         mode: "text/x-sql",
@@ -39,7 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         indentWithTabs: true,
         extraKeys: {"Ctrl-Space": "autocomplete"}
     });
-
 
     populateTopicList(selectTopic);
     showConcept(currentConceptIndex);
@@ -131,11 +125,21 @@ function formatSchemaInfo(schemaInfo) {
     return html;
 }
 
+
+function setupNavigationButtons() {
+    const prevBtn = document.getElementById('prev-concept');
+    const nextBtn = document.getElementById('next-concept');
+
+    prevBtn.addEventListener('click', () => navigateConcept(-1));
+    nextBtn.addEventListener('click', () => navigateConcept(1));
+}
+
 function navigateConcept(direction) {
     currentConceptIndex = (currentConceptIndex + direction + concepts.length) % concepts.length;
     showConcept(currentConceptIndex);
-    resetOutputArea(); // Add this line to reset the output area
+    resetOutputArea();
 }
+
 
 function resetOutputArea() {
     const outputArea = document.getElementById('output-area');
@@ -148,6 +152,7 @@ function resetOutputArea() {
         sqlEditor.refresh();
     }
 }
+
 
 async function handleRunQuery() {
     const outputArea = document.getElementById('output-area');
@@ -190,3 +195,14 @@ function formatResultAsTable(result) {
 
 
 
+// function checkEventListeners() {
+//     const prevBtn = document.getElementById('prev-concept');
+//     const nextBtn = document.getElementById('next-concept');
+    
+//     console.log('Checking event listeners:');
+//     console.log('Prev button:', prevBtn.onclick ? 'Has onclick' : 'No onclick');
+//     console.log('Next button:', nextBtn.onclick ? 'Has onclick' : 'No onclick');
+// }
+
+// // Call this function periodically
+// setInterval(checkEventListeners, 5000);
