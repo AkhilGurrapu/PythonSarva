@@ -36,7 +36,6 @@ export const concepts = [
     orderByClause,
     createTable,
     insertInto,
-    whereClause,
     unionAndUnionAll,
     aggregateFunctions,
     havingClause,
