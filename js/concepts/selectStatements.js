@@ -14,14 +14,14 @@ export const selectStatements = {
             <li>Use AS to alias columns: <code>SELECT column AS alias FROM table_name;</code></li>
         </ul>
     `,
-    practice: "SELECT * FROM users;",
+    practice: "SELECT * FROM customers;",
     script: `
         function generateQuery() {
             const selector = document.getElementById('column-selector');
             const selectedColumns = Array.from(selector.selectedOptions).map(option => option.value);
             const query = selectedColumns.length > 0 
-                ? \`SELECT \${selectedColumns.join(', ')} FROM users;\`
-                : 'SELECT * FROM users;';
+                ? \`SELECT \${selectedColumns.join(', ')} FROM customers;\`
+                : 'SELECT * FROM customers;';
             document.getElementById('generated-query').textContent = query;
         }
     `

@@ -7,5 +7,5 @@ export const aggregateFunctions = {
         <pre>SELECT AVG(price) as average_price FROM products;</pre>
         <p>This will calculate the average price from the products table.</p>
     `,
-    practice: "SELECT COUNT(*) as total_users FROM users;"
+    practice: "SELECT AVG(price) as average_price FROM products;"
 };

@@ -7,5 +7,5 @@ export const whereClause = {
         <pre>SELECT * FROM users WHERE age > 18;</pre>
         <p>This will select all columns from the users table where the age is greater than 18.</p>
     `,
-    practice: "SELECT * FROM users WHERE age > 25;"
+    practice: "SELECT * FROM products WHERE price > 50;"
 };

@@ -61,10 +61,12 @@ function toggleSchemaSidebar() {
 }
 
 function closeSidebars() {
+    const topicsSidebar = document.getElementById('topics-sidebar');
     const schemaSidebar = document.getElementById('schema-sidebar');
     const erdSidebar = document.getElementById('data-model-sidebar');
     const overlay = document.querySelector('.overlay');
 
+    topicsSidebar.classList.remove('active');
     schemaSidebar.classList.remove('active');
     erdSidebar.classList.remove('active');
     overlay.classList.remove('active');
@@ -93,12 +95,14 @@ function formatSchemaInfo(schemaInfo) {
         schemaInfo[tableName].forEach(column => {
             let columnClass = 'column-name';
             if (column.primaryKey) columnClass += ' primary-key';
+            if (column.foreignKey) columnClass += ' foreign-key';
             
             html += `<li>
                 <span class="${columnClass}">${column.name}</span>
                 <span class="column-type">${column.type}</span>
                 ${column.notNull ? '<span class="not-null">NOT NULL</span>' : ''}
                 ${column.primaryKey ? '<span class="primary-key-indicator">PK</span>' : ''}
+                ${column.foreignKey ? '<span class="foreign-key-indicator">FK</span>' : ''}
             </li>`;
         });
         html += '</ul>';
