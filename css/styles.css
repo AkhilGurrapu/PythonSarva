@@ -490,3 +490,14 @@ header {
 
 
 
+.CodeMirror {
+    height: 200px;
+    border-radius: 5px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 14px;
+    background-color: #1e293b;
+    color: #e2e8f0;
+    line-height: 1.6;
+    padding: 10px;
+}
+

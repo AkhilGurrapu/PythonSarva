@@ -15,12 +15,21 @@ export const concepts = [
 export function showConcept(index) {
     const conceptContent = document.getElementById('concept-content');
     const currentConcept = document.getElementById('current-concept');
-    const sqlEditor = document.getElementById('sql-editor');
 
     const concept = concepts[index];
     conceptContent.innerHTML = concept.content;
     currentConcept.textContent = concept.title;
-    sqlEditor.value = concept.practice;
+
+    // Update CodeMirror instead of the textarea
+    if (window.sqlEditor) {
+        window.sqlEditor.setValue(concept.practice || '');
+        window.sqlEditor.refresh();
+    } else {
+        const sqlEditor = document.getElementById('sql-editor');
+        if (sqlEditor) {
+            sqlEditor.value = concept.practice || '';
+        }
+    }
 }
 
 export function populateTopicList(onSelectTopic) {

@@ -9,5 +9,7 @@ FROM users
 JOIN orders ON users.id = orders.user_id;</pre>
         <p>This will select the name from the users table and the order_date from the orders table, joining the tables on the user_id.</p>
     `,
-    practice: "SELECT customers.name, sales.sale_id, sales.quantity FROM customers JOIN sales ON customers.id = sales.customer_id;"
+    practice: `SELECT customers.name, sales.sale_id, sales.quantity 
+FROM customers 
+JOIN sales ON customers.id = sales.customer_id;`,
 };

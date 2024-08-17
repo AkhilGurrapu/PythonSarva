@@ -7,5 +7,7 @@ export const groupByClause = {
         <pre>SELECT name, AVG(price) as avg_price FROM products GROUP BY name;;</pre>
         <p>This will count the number of products in each name group.</p>
     `,
-    practice: "SELECT name, AVG(price) as avg_price FROM products GROUP BY name;"
+    practice: `SELECT name, AVG(price) as avg_price
+FROM products
+GROUP BY name;`,
 };

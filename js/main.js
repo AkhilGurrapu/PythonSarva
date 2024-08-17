@@ -4,6 +4,8 @@ import { initERD } from './erd.js';
 
 
 let currentConceptIndex = 0;
+let sqlEditor;
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     await initializeDB();
@@ -25,9 +27,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     previewSchemaBtn.addEventListener('click', toggleSchemaSidebar);
     overlay.addEventListener('click', closeSidebars);
 
+
+    sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
+        mode: "text/x-sql",
+        theme: "dracula",
+        lineNumbers: true,
+        autoCloseBrackets: true,
+        matchBrackets: true,
+        indentUnit: 4,
+        tabSize: 4,
+        indentWithTabs: true,
+        extraKeys: {"Ctrl-Space": "autocomplete"}
+    });
+
+
     populateTopicList(selectTopic);
     showConcept(currentConceptIndex);
-    // Initialize ERD functionality
+
+    if (concepts[currentConceptIndex].practice) {
+        sqlEditor.setValue(concepts[currentConceptIndex].practice);
+        sqlEditor.refresh();
+    }
+
     initERD();
 });
 
@@ -118,15 +139,19 @@ function navigateConcept(direction) {
 
 function resetOutputArea() {
     const outputArea = document.getElementById('output-area');
-    outputArea.innerHTML = ''; // Clear the output area
-    const sqlEditor = document.getElementById('sql-editor');
-    sqlEditor.value = concepts[currentConceptIndex].practice || ''; // Reset SQL editor to the practice query of the current concept
+    outputArea.innerHTML = '';
+    if (concepts[currentConceptIndex].practice) {
+        sqlEditor.setValue(concepts[currentConceptIndex].practice);
+        sqlEditor.refresh();
+    } else {
+        sqlEditor.setValue('');
+        sqlEditor.refresh();
+    }
 }
 
 async function handleRunQuery() {
-    const sqlEditor = document.getElementById('sql-editor');
     const outputArea = document.getElementById('output-area');
-    const query = sqlEditor.value;
+    const query = sqlEditor.getValue();
 
     try {
         const result = await runQuery(query);
