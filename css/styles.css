@@ -241,6 +241,9 @@ header {
 .right-column {
     width: 45%;
     min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
 }
 
 #resizer {
@@ -313,14 +316,22 @@ header {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 20px;
+    align-self: flex-start;
+}
+
+
+.sql-editor-container {
+    margin-bottom: 20px;
 }
 
 #output-area {
     background-color: #16213e;
     border-radius: 5px;
-    padding: 10px;
+    padding: 20px;
     min-height: 200px;
     overflow-y: auto;
+    flex-grow: 1;
 }
 
 .result-table {
@@ -500,4 +511,3 @@ header {
     line-height: 1.6;
     padding: 10px;
 }
-
