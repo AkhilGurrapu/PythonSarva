@@ -25,9 +25,11 @@ import { inventoryManagement } from './concepts/inventoryManagement.js';
 import { marketBasketAnalysis } from './concepts/marketBasketAnalysis.js';
 import { cohortAnalysis } from './concepts/cohortAnalysis.js';
 import {orderByClause} from "./concepts/orderByClause.js";
+import { introToSQL } from './concepts/introToSQL.js';
 
 
 export const concepts = [
+    introToSQL,
     selectStatements,
     whereClause,
     joinOperations,
@@ -80,6 +82,7 @@ export function showConcept(index) {
 
 export function populateTopicList(onSelectTopic) {
     const topicList = document.getElementById('topic-list');
+    topicList.innerHTML = ''; // Clear existing content
     concepts.forEach((concept, index) => {
         const li = document.createElement('li');
         li.textContent = concept.title;

@@ -1,39 +1,45 @@
 export const dateOperations = {
   title: "Date Operations",
   content: `
-    <h3>Date Operations</h3>
-    <p>SQL provides various functions and operators to work with date and time data. These operations are crucial for time-based analysis and reporting.</p>
-    
-    <h4>Key Points:</h4>
-    <ul>
-      <li>Date formats can vary between database systems.</li>
-      <li>Common operations include extraction (e.g., year, month, day), addition, and subtraction.</li>
-      <li>Date comparisons are frequently used in WHERE clauses.</li>
-      <li>Many databases support interval data types for date arithmetic.</li>
-    </ul>
+    <div class="topic-content">
+      <h3 class="topic-subtitle">Date Operations</h3>
+      <p class="topic-paragraph">SQL provides various functions and operators to work with date and time data. These operations are crucial for time-based analysis and reporting.</p>
+      
+      <h4 class="topic-subtitle">Key Points:</h4>
+      <ul class="topic-list">
+        <li>Date formats can vary between database systems.</li>
+        <li>Common operations include extraction (e.g., year, month, day), addition, and subtraction.</li>
+        <li>Date comparisons are frequently used in WHERE clauses.</li>
+        <li>Many databases support interval data types for date arithmetic.</li>
+      </ul>
 
-    <h4>Common Date Functions (may vary by database):</h4>
-    <ul>
-      <li>EXTRACT(): Extracts parts of a date</li>
-      <li>DATE_TRUNC(): Truncates a timestamp to a specified precision</li>
-      <li>DATEADD() or +: Adds an interval to a date</li>
-      <li>DATEDIFF(): Calculates the difference between two dates</li>
-    </ul>
+      <h4 class="topic-subtitle">Common Date Functions (may vary by database):</h4>
+      <ul class="topic-list">
+        <li>EXTRACT(): Extracts parts of a date</li>
+        <li>DATE_TRUNC(): Truncates a timestamp to a specified precision</li>
+        <li>DATEADD() or +: Adds an interval to a date</li>
+        <li>DATEDIFF(): Calculates the difference between two dates</li>
+      </ul>
 
-    <h4>Example:</h4>
-    <pre>
-    SELECT 
-      order_date,
-      EXTRACT(YEAR FROM order_date) AS year,
-      EXTRACT(MONTH FROM order_date) AS month,
-      EXTRACT(DAY FROM order_date) AS day,
-      DATE_TRUNC('month', order_date) AS month_start,
-      order_date + INTERVAL '7 days' AS due_date,
-      DATEDIFF(day, order_date, CURRENT_DATE) AS days_since_order
-    FROM orders;
-    </pre>
+      <h4 class="topic-subtitle">Example:</h4>
+      <pre class="topic-code">
+SELECT 
+  order_date,
+  EXTRACT(YEAR FROM order_date) AS year,
+  EXTRACT(MONTH FROM order_date) AS month,
+  EXTRACT(DAY FROM order_date) AS day,
+  DATE_TRUNC('month', order_date) AS month_start,
+  order_date + INTERVAL '7 days' AS due_date,
+  DATEDIFF(day, order_date, CURRENT_DATE) AS days_since_order
+FROM orders;
+      </pre>
 
-    <p>This example demonstrates various date operations including extraction, truncation, addition, and difference calculation.</p>
+      <p class="topic-paragraph">This example demonstrates various date operations including extraction, truncation, addition, and difference calculation.</p>
+
+      <div class="topic-note">
+        <p><strong>Note:</strong> Working with dates in SQL is essential for many types of data analysis, especially in business contexts. Understanding these operations allows you to perform time-based aggregations, track changes over time, and create meaningful reports. Remember that the exact syntax for date operations can vary between different database systems, so always consult your specific database's documentation for the most accurate information.</p>
+      </div>
+    </div>
   `,
   practice: `-- Query to analyze sales by day of week
 SELECT 

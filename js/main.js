@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     previewSchemaBtn.addEventListener('click', toggleSchemaSidebar);
     overlay.addEventListener('click', closeSidebars);
 
+    currentConceptIndex = 0;  // Start with the introduction
+    showConcept(currentConceptIndex);
+
     sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
         mode: "text/x-sql",
         theme: "dracula",
@@ -42,6 +45,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         sqlEditor.setValue(concepts[currentConceptIndex].practice);
         sqlEditor.refresh();
     }
+
+    initializeNavigation();
+
 
     initERD();
 });
@@ -93,8 +99,8 @@ function selectTopic(index) {
     showConcept(currentConceptIndex);
     toggleTopicsSidebar();
     resetOutputArea();
+    updateNavigationButtons(); // Add this line
 }
-
 
 
 async function updateSchemaContent() {
@@ -125,21 +131,38 @@ function formatSchemaInfo(schemaInfo) {
     return html;
 }
 
+function navigateConcept(direction) {
+    const newIndex = currentConceptIndex + direction;
+    
+    // Check if the new index is within bounds
+    if (newIndex >= 0 && newIndex < concepts.length) {
+        currentConceptIndex = newIndex;
+        showConcept(currentConceptIndex);
+        resetOutputArea();
+        updateNavigationButtons();
+    }
+}
 
-function setupNavigationButtons() {
+function updateNavigationButtons() {
     const prevBtn = document.getElementById('prev-concept');
     const nextBtn = document.getElementById('next-concept');
 
-    prevBtn.addEventListener('click', () => navigateConcept(-1));
-    nextBtn.addEventListener('click', () => navigateConcept(1));
+    // Disable prev button if we're at the first concept
+    prevBtn.disabled = currentConceptIndex === 0;
+
+    // Disable next button if we're at the last concept
+    nextBtn.disabled = currentConceptIndex === concepts.length - 1;
+
+    // Optionally, you can also visually indicate the disabled state
+    prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
+    nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
 }
 
-function navigateConcept(direction) {
-    currentConceptIndex = (currentConceptIndex + direction + concepts.length) % concepts.length;
+
+function initializeNavigation() {
     showConcept(currentConceptIndex);
-    resetOutputArea();
+    updateNavigationButtons();
 }
-
 
 function resetOutputArea() {
     const outputArea = document.getElementById('output-area');
@@ -192,17 +215,3 @@ function formatResultAsTable(result) {
     return tableHtml;
 }
 
-
-
-
-// function checkEventListeners() {
-//     const prevBtn = document.getElementById('prev-concept');
-//     const nextBtn = document.getElementById('next-concept');
-    
-//     console.log('Checking event listeners:');
-//     console.log('Prev button:', prevBtn.onclick ? 'Has onclick' : 'No onclick');
-//     console.log('Next button:', nextBtn.onclick ? 'Has onclick' : 'No onclick');
-// }
-
-// // Call this function periodically
-// setInterval(checkEventListeners, 5000);
