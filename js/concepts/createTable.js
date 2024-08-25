@@ -37,6 +37,9 @@ CREATE TABLE customers (
       <div class="topic-note">
         <p><strong>Note:</strong> When creating tables, it's important to carefully consider your data model. Think about the types of data you'll be storing, the relationships between different entities, and any constraints that should be enforced. A well-designed table structure can significantly impact the efficiency and maintainability of your database.</p>
       </div>
+      <div class="topic-note">
+           <p><strong>Note:</strong> The PRAGMA table_info() statement is a SQLite-specific command that returns information about the columns in a table, including their names, types, and constraints. This will display the structure of the table even when it's empty, showing you the column names, types, and other properties.<p>
+      </div>
     </div>
   `,
   practice: `-- Create a table for storing product information
@@ -45,5 +48,7 @@ CREATE TABLE new_products (
   name TEXT NOT NULL,
   price REAL,
   category TEXT
-);`
+);
+
+PRAGMA table_info(new_products);`
 };

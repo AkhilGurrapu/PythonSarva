@@ -40,12 +40,14 @@ HAVING COUNT(*) > 5 AND AVG(price) > 100;
       </div>
     </div>
   `,
-  practice: `-- Find customers who have made more than 3 purchases with a total spend over 1000
+  practice: `-- Find customers who have made more than 1 purchase
+-- and calculate their total spend
 SELECT 
   customer_id,
   COUNT(*) as purchase_count,
   SUM(total_price) as total_spend
 FROM sales
 GROUP BY customer_id
-HAVING COUNT(*) > 3 AND SUM(total_price) > 1000;`
+HAVING COUNT(*) > 1
+ORDER BY total_spend DESC;`
 };

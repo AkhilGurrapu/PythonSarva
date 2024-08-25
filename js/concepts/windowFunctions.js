@@ -47,16 +47,13 @@ FROM products;
       </div>
     </div>
   `,
-  practice: `-- Calculate a moving average of sales over the last 3 days
+  practice: `-- Use ROW_NUMBER() to rank customers by their total sales
 SELECT 
-  dates.date,
-  SUM(sales.total_price) as daily_sales,
-  AVG(SUM(sales.total_price)) OVER (
-    ORDER BY dates.date
-    ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
-  ) as moving_avg_3day
+  customer_id,
+  SUM(total_price) as total_sales,
+  ROW_NUMBER() OVER (ORDER BY SUM(total_price) DESC) as sales_rank
 FROM sales
-JOIN dates ON sales.date_id = dates.id
-GROUP BY dates.date
-ORDER BY dates.date;`
+GROUP BY customer_id
+ORDER BY total_sales DESC
+LIMIT 5;`
 };

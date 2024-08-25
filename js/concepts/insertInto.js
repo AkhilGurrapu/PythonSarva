@@ -33,6 +33,9 @@ VALUES ('John Doe', 'john@example.com', '1990-01-15');
     </div>
   `,
   practice: `-- Insert a new product into the products table
-INSERT INTO products (name, price, category)
-VALUES ('Laptop', 999.99, 'Electronics');`
+INSERT INTO new_products (id, name, price, category)
+VALUES (1, 'Laptop', 999.99, 'Electronics');
+
+-- View the new inserted values in the new_products table
+SELECT * FROM new_products;`
 };

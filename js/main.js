@@ -182,13 +182,21 @@ async function handleRunQuery() {
     const query = sqlEditor.getValue();
 
     try {
-        const result = await runQuery(query);
-        outputArea.innerHTML = formatResultAsTable(result);
+        // Check if the query contains CREATE PROCEDURE or CALL
+        if (query.toLowerCase().includes('create procedure') || query.toLowerCase().includes('call')) {
+            outputArea.innerHTML = `
+                <p style="color: yellow;">
+                    We cannot execute stored procedures here, the database does not support stored procedures.
+                    The code provided is an example of how stored procedures might work in other database systems.
+                </p>`;
+        } else {
+            const result = await runQuery(query);
+            outputArea.innerHTML = formatResultAsTable(result);
+        }
     } catch (error) {
         outputArea.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
     }
 }
-
 function formatResultAsTable(result) {
     if (result.length === 0) {
         return '<p>Query executed successfully, but returned no results.</p>';

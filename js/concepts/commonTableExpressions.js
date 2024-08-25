@@ -40,14 +40,15 @@ WHERE price < 2000;
       </div>
     </div>
   `,
-  practice: `-- Use a CTE to find customers who have made purchases in all stores
-WITH customer_stores AS (
-  SELECT customer_id, COUNT(DISTINCT store_id) as stores_visited
+  practice: `-- Use a CTE to find top customers by total sales
+WITH customer_sales AS (
+  SELECT customer_id, SUM(total_price) as total_sales
   FROM sales
   GROUP BY customer_id
 )
-SELECT c.name, c.email
+SELECT c.name, cs.total_sales
 FROM customers c
-JOIN customer_stores cs ON c.id = cs.customer_id
-WHERE cs.stores_visited = (SELECT COUNT(*) FROM stores);`
-};
+JOIN customer_sales cs ON c.id = cs.customer_id
+ORDER BY cs.total_sales DESC
+LIMIT 5;`
+  };

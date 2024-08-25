@@ -43,16 +43,16 @@ FROM products;
       </div>
     </div>
   `,
-  practice: `-- Classify customers based on their total spend
+  practice: `-- Categorize individual sales based on their total price
 SELECT 
-  c.name,
-  SUM(s.total_price) as total_spend,
+  sale_id,
+  total_price,
   CASE
-    WHEN SUM(s.total_price) < 500 THEN 'Low Spender'
-    WHEN SUM(s.total_price) >= 500 AND SUM(s.total_price) < 1000 THEN 'Medium Spender'
-    ELSE 'High Spender'
-  END AS customer_category
-FROM customers c
-JOIN sales s ON c.id = s.customer_id
-GROUP BY c.id;`
+    WHEN total_price < 100 THEN 'Low Value Sale'
+    WHEN total_price >= 100 AND total_price < 500 THEN 'Medium Value Sale'
+    ELSE 'High Value Sale'
+  END AS sale_category
+FROM sales
+ORDER BY total_price DESC
+LIMIT 10;`
 };

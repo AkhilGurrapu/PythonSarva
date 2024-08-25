@@ -37,19 +37,22 @@ COMMIT;
       </div>
     </div>
   `,
-  practice: `-- Implement a transaction for creating a new sale and updating product inventory
+  practice: `-- Implement a transaction for inserting new row into sales and updating product category
 BEGIN TRANSACTION;
 
-INSERT INTO sales (date_id, customer_id, product_id, quantity, total_price)
-VALUES (20230817, 1, 1, 2, 199.98);
+-- Add a new sale
+INSERT INTO sales (date_id, customer_id, product_id, store_id, quantity, total_price, discount)
+VALUES (20240817, 1, 1, 1, 2, 39.98, 0);
 
+-- Update the product (let's pretend we're updating a quantity)
 UPDATE products
-SET stock = stock - 2
+SET category = "Elect"  -- Just an example, not actually updating quantity
 WHERE id = 1;
 
-COMMIT;
+commit;
 
--- Verify the changes
-SELECT * FROM sales WHERE date_id = 20230817;
-SELECT stock FROM products WHERE id = 1;`
+SELECT * FROM sales WHERE date_id == 20240817;
+
+SELECT * FROM products WHERE id = 1;
+`
 };

@@ -33,7 +33,7 @@ export const introToSQL = {
                 <li>Dates: A date dimension table for time-based analysis</li>
                 <li>Sales: Transaction data linking customers, products, stores, and dates</li>
             </ul>
-            <p class="topic-paragraph">You can view the complete schema by clicking on the "Preview Schema" button, which shows detailed information about each table and its columns.</p>
+            <p class="topic-paragraph">You can view the complete schema by clicking on the "Database Schema" button within "Schema", which shows detailed information about each table and its columns.</p>
 
             <h3 class="topic-subtitle">Entity-Relationship Diagram (ERD)</h3>
             <p class="topic-paragraph">The ERD provides a visual representation of the database structure, showing how different tables are related. Key features of our ERD include:</p>

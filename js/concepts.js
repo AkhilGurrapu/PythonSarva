@@ -22,10 +22,10 @@ import { dateOperations } from './concepts/dateOperations.js';
 import { salesAnalysis } from './concepts/salesAnalysis.js';
 import { customerSegmentation } from './concepts/customerSegmentation.js';
 import { inventoryManagement } from './concepts/inventoryManagement.js';
-import { marketBasketAnalysis } from './concepts/marketBasketAnalysis.js';
 import { cohortAnalysis } from './concepts/cohortAnalysis.js';
 import {orderByClause} from "./concepts/orderByClause.js";
 import { introToSQL } from './concepts/introToSQL.js';
+import { rankDenseRank } from './concepts/rankDenseRank.js';
 
 
 export const concepts = [
@@ -44,6 +44,7 @@ export const concepts = [
     subqueries,
     commonTableExpressions,
     windowFunctions,
+    rankDenseRank,
     caseStatement,
     pivot,
     views,
@@ -56,7 +57,6 @@ export const concepts = [
     salesAnalysis,
     customerSegmentation,
     inventoryManagement,
-    marketBasketAnalysis,
     cohortAnalysis
 ];
 

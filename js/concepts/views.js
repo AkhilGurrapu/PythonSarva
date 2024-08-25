@@ -56,5 +56,5 @@ JOIN dates ON sales.date_id = dates.id
 GROUP BY dates.year, dates.month;
 
 -- Now query the view
-SELECT * FROM monthly_sales_summary WHERE total_sales > 10000;`
+SELECT * FROM monthly_sales_summary WHERE total_sales > 100;`
 };
