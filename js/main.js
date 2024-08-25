@@ -179,10 +179,14 @@ function resetOutputArea() {
 
 async function handleRunQuery() {
     const outputArea = document.getElementById('output-area');
-    const query = sqlEditor.getValue();
+    let query = sqlEditor.getValue();
+    const selection = sqlEditor.getSelection();
+
+    if (selection) {
+        query = selection;
+    }
 
     try {
-        // Check if the query contains CREATE PROCEDURE or CALL
         if (query.toLowerCase().includes('create procedure') || query.toLowerCase().includes('call')) {
             outputArea.innerHTML = `
                 <p style="color: yellow;">
@@ -197,6 +201,9 @@ async function handleRunQuery() {
         outputArea.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
     }
 }
+
+
+
 function formatResultAsTable(result) {
     if (result.length === 0) {
         return '<p>Query executed successfully, but returned no results.</p>';
