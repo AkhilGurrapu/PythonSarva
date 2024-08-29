@@ -618,11 +618,13 @@ header {
 
 /* ... (existing styles) */
 
+/* ... (existing styles) */
+
 .code-container {
     position: relative;
 }
 
-.copy-button {
+.copy-btn {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -636,12 +638,13 @@ header {
     transition: background-color 0.3s ease;
 }
 
-.copy-button:hover {
+.copy-btn:hover {
     background-color: #303f9f;
 }
 
-.copy-button.copied {
+.copy-btn.copied {
     background-color: #4CAF50; /* Green background when copied */
 }
 
+/* ... (rest of the existing styles) */
 
