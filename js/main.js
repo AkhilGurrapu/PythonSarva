@@ -23,6 +23,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     previewSchemaBtn.addEventListener('click', toggleSchemaSidebar);
     overlay.addEventListener('click', closeSidebars);
 
+      // Add event listener for copy buttons
+// Add event listener for copy buttons
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('copy-btn')) {
+            copyToClipboard(e.target);
+        }
+    });
+    
+
     currentConceptIndex = 0;  // Start with the introduction
     showConcept(currentConceptIndex);
 
@@ -38,6 +47,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         extraKeys: {"Ctrl-Space": "autocomplete"}
     });
 
+    window.sqlEditor = sqlEditor;
+
     populateTopicList(selectTopic);
     showConcept(currentConceptIndex);
 
@@ -51,6 +62,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     initERD();
 });
+
+
+
+
+function copyToClipboard(button) {
+    const preElement = button.nextElementSibling;
+    const textToCopy = preElement.textContent.trim();
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        button.innerHTML = 'Copied &#10004;'; // Unicode for tick mark
+        button.classList.add('copied');
+        setTimeout(() => {
+            button.innerHTML = 'Copy';
+            button.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+
 
 function toggleTopicsSidebar() {
     const sidebar = document.getElementById('topics-sidebar');

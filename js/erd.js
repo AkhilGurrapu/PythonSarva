@@ -43,14 +43,13 @@ function generateERDSVG() {
     
     <!-- Customers table -->
     <g transform="translate(50, 50)">
-        <rect width="250" height="210" fill="#1e293b" rx="10" ry="10" stroke="#3949ab" stroke-width="2"/>
+        <rect width="250" height="160" fill="#1e293b" rx="10" ry="10" stroke="#3949ab" stroke-width="2"/>
         <text x="125" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">Customers</text>
         <line x1="10" y1="45" x2="240" y2="45" stroke="#3949ab" stroke-width="1"/>
         <text x="15" y="70" fill="#ecf0f1" font-size="14">🔑 id (PK)</text>
         <text x="15" y="100" fill="#ecf0f1" font-size="14">name</text>
         <text x="15" y="130" fill="#ecf0f1" font-size="14">email</text>
-        <text x="15" y="160" fill="#ecf0f1" font-size="14">birth_date</text>
-        <text x="15" y="190" fill="#ecf0f1" font-size="14">city, state, country</text>
+        text x="15" y="160" fill="#ecf0f1" font-size="14">city, state, country</text>
     </g>
 
     <!-- Products table -->

@@ -63,20 +63,46 @@ export const concepts = [
 export function showConcept(index) {
     const conceptContent = document.getElementById('concept-content');
     const currentConcept = document.getElementById('current-concept');
+    const subConceptButtons = document.getElementById('sub-concept-buttons');
 
     const concept = concepts[index];
     conceptContent.innerHTML = concept.content;
     currentConcept.textContent = concept.title;
 
-    // Update CodeMirror instead of the textarea
+    // Clear existing sub-concept buttons
+    subConceptButtons.innerHTML = '';
+
+    // Create sub-concept buttons if they exist
+    if (concept.subConcepts) {
+        concept.subConcepts.forEach(subConcept => {
+            const button = document.createElement('button');
+            button.textContent = subConcept.name;
+            button.classList.add('sub-concept-button');
+            button.addEventListener('click', () => {
+                if (window.sqlEditor) {
+                    window.sqlEditor.setValue(subConcept.query);
+                    window.sqlEditor.refresh();
+                }
+                // Clear the output area when a new sub-concept is selected
+                const outputArea = document.getElementById('output-area');
+                if (outputArea) {
+                    outputArea.innerHTML = '';
+                }
+            });
+            subConceptButtons.appendChild(button);
+        });
+    }
+
+    // Set the default practice query
     if (window.sqlEditor) {
         window.sqlEditor.setValue(concept.practice || '');
         window.sqlEditor.refresh();
-    } else {
-        const sqlEditor = document.getElementById('sql-editor');
-        if (sqlEditor) {
-            sqlEditor.value = concept.practice || '';
-        }
+    }
+
+    // Clear the output area when a new concept is selected
+    const outputArea = document.getElementById('output-area');
+    if (outputArea) {
+        outputArea.innerHTML = '';
     }
 }
 
@@ -90,3 +116,4 @@ export function populateTopicList(onSelectTopic) {
         topicList.appendChild(li);
     });
 }
+

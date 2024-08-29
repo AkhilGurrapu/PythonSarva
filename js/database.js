@@ -15,28 +15,27 @@ CREATE TABLE customers (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    birth_date DATE,
     city TEXT,
     state TEXT,
     country TEXT
 );
 
-INSERT INTO customers (id, name, email, birth_date, city, state, country) VALUES 
-    (1, 'John Doe', 'john.doe@datasarva.com', '1990-05-15', 'New York', 'NY', 'USA'),
-    (2, 'Jane Smith', 'jane.smith@datasarva.com', '1988-09-22', 'Los Angeles', 'CA', 'USA'),
-    (3, 'Robert Johnson', 'robert.johnson@datasarva.com', '1985-12-10', 'Chicago', 'IL', 'USA'),
-    (4, 'Emily Brown', 'emily.brown@datasarva.com', '1992-03-30', 'Houston', 'TX', 'USA'),
-    (5, 'Michael Davis', 'michael.davis@datasarva.com', '1980-07-18', 'Phoenix', 'AZ', 'USA'),
-    (6, 'Sarah Wilson', 'sarah.wilson@datasarva.com', '1995-01-05', 'Seattle', 'WA', 'USA'),
-    (7, 'David Martinez', 'david.martinez@datasarva.com', '1987-11-30', 'Miami', 'FL', 'USA'),
-    (8, 'Jennifer Taylor', 'jennifer.taylor@datasarva.com', '1993-06-12', 'Boston', 'MA', 'USA'),
-    (9, 'Christopher Anderson', 'chris.anderson@datasarva.com', '1982-04-25', 'San Francisco', 'CA', 'USA'),
-    (10, 'Lisa Thomas', 'lisa.thomas@datasarva.com', '1991-08-08', 'Denver', 'CO', 'USA'),
-    (11, 'Mark Jackson', 'mark.jackson@datasarva.com', '1989-02-14', 'Atlanta', 'GA', 'USA'),
-    (12, 'Elizabeth White', 'elizabeth.white@datasarva.com', '1994-10-20', 'Dallas', 'TX', 'USA'),
-    (13, 'James Harris', 'james.harris@datasarva.com', '1986-07-07', 'Portland', 'OR', 'USA'),
-    (14, 'Mary Clark', 'mary.clark@datasarva.com', '1983-12-01', 'Las Vegas', 'NV', 'USA'),
-    (15, 'Daniel Lewis', 'daniel.lewis@datasarva.com', '1997-03-18', 'Nashville', 'TN', 'USA');
+INSERT INTO customers (id, name, email, city, state, country) VALUES 
+    (1, 'John Doe', 'john.doe@datasarva.com', 'New York', 'NY', 'USA'),
+    (2, 'Jane Smith', 'jane.smith@datasarva.com', 'Los Angeles', 'CA', 'USA'),
+    (3, 'Robert Johnson', 'robert.johnson@datasarva.com', 'Chicago', 'IL', 'USA'),
+    (4, 'Emily Brown', 'emily.brown@datasarva.com', 'Houston', 'TX', 'USA'),
+    (5, 'Michael Davis', 'michael.davis@datasarva.com', 'Phoenix', 'AZ', 'USA'),
+    (6, 'Sarah Wilson', 'sarah.wilson@datasarva.com', 'Seattle', 'WA', 'USA'),
+    (7, 'David Martinez', 'david.martinez@datasarva.com', 'Miami', 'FL', 'USA'),
+    (8, 'Jennifer Taylor', 'jennifer.taylor@datasarva.com', 'Boston', 'MA', 'USA'),
+    (9, 'Christopher Anderson', 'chris.anderson@datasarva.com', 'San Francisco', 'CA', 'USA'),
+    (10, 'Lisa Thomas', 'lisa.thomas@datasarva.com', 'Denver', 'CO', 'USA'),
+    (11, 'Mark Jackson', 'mark.jackson@datasarva.com', 'Atlanta', 'GA', 'USA'),
+    (12, 'Elizabeth White', 'elizabeth.white@datasarva.com', 'Dallas', 'TX', 'USA'),
+    (13, 'James Harris', 'james.harris@datasarva.com', 'Portland', 'OR', 'USA'),
+    (14, 'Mary Clark', 'mary.clark@datasarva.com', 'Las Vegas', 'NV', 'USA'),
+    (15, 'Daniel Lewis', 'daniel.lewis@datasarva.com', 'Nashville', 'TN', 'USA');
 
 -- Products table
 CREATE TABLE products (

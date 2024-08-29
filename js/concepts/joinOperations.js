@@ -23,12 +23,15 @@ ON table1.column = table2.column;
       </pre>
   
       <h4 class="topic-subtitle">Example:</h4>
-      <pre class="topic-code">
+      <div class="code-container">
+        <button class="copy-btn">Copy</button>
+        <pre class="topic-code">
 SELECT customers.name, sales.total_price
 FROM customers
 INNER JOIN sales ON customers.id = sales.customer_id
 WHERE sales.total_price > 100;
-      </pre>
+        </pre>
+      </div>
   
       <p class="topic-paragraph">This query joins the customers and sales tables to show customer names for sales over $100.</p>
 
@@ -42,5 +45,47 @@ SELECT products.name, dates.date
 FROM products
 LEFT JOIN sales ON products.id = sales.product_id
 LEFT JOIN dates ON sales.date_id = dates.id
-ORDER BY dates.date DESC;`
+ORDER BY dates.date DESC;`, 
+subConcepts: [
+  {
+      name: "Inner Join",
+      query: `-- Inner Join Example
+-- Find all customers and their sales (if any)
+SELECT 
+    customers.name,
+    customers.email
+FROM 
+    customers
+INNER JOIN sales ON customers.id = sales.customer_id
+ORDER BY 
+    customers.name;`
+  },
+  {
+      name: "Left Join",
+      query: `-- Left Join Example
+-- Show all products and their sales (if any)
+SELECT 
+    products.name AS product_name,
+    products.category,
+    sales.quantity,
+    sales.total_price
+FROM 
+    products
+LEFT JOIN sales ON products.id = sales.product_id
+ORDER BY 
+    products.name;`
+  },
+  {
+      name: "Right Join",
+      query: `-- Right Join Example
+SELECT 
+    stores.name AS store_name,
+    products.name AS product_name,
+    products.category
+FROM 
+    stores
+RIGHT JOIN products
+LIMIT 20;`
+  }
+]
 };

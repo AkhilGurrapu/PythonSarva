@@ -43,7 +43,7 @@ export const introToSQL = {
                 <li>Foreign keys (FK) indicated with a 🔗 symbol</li>
                 <li>Relationships between tables shown as dotted lines</li>
             </ul>
-            <p class="topic-paragraph">You can view the ERD by clicking on the "Preview ERD" button. This diagram helps in understanding table relationships and designing complex queries.</p>
+            <p class="topic-paragraph">You can view the ERD by clicking on the "Model View" button. This diagram helps in understanding table relationships and designing complex queries.</p>
 
             <h3 class="topic-subtitle">How to Use This App</h3>
             <p class="topic-paragraph">This SQL Learner app is designed to help you learn SQL interactively:</p>
@@ -51,7 +51,7 @@ export const introToSQL = {
                 <li><span class="topic-highlight">Concepts:</span> Each page introduces a SQL concept with explanations and examples.</li>
                 <li><span class="topic-highlight">Practice:</span> Use the SQL editor to write and run queries on our sample database.</li>
                 <li><span class="topic-highlight">Results:</span> See the output of your queries instantly in the results area.</li>
-                <li><span class="topic-highlight">Schema:</span> View the database schema to understand table structures.</li>
+                <li><span class="topic-highlight">Schema:</span> View the database schema by clicking on "Schema" on top right to understand table structures.</li>
                 <li><span class="topic-highlight">ERD:</span> Explore the Entity-Relationship Diagram to visualize table relationships.</li>
                 <li><span class="topic-highlight">Navigation:</span> Use the sidebar to jump between different SQL topics.</li>
             </ol>

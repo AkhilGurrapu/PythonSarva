@@ -39,9 +39,11 @@
             </div>
             <div id="resizer"></div>
             <div class="right-column">
+                <div id="sub-concept-buttons"></div>
                 <div class="sql-editor-container">
                     <textarea id="sql-editor"></textarea>
                 </div>
+                
                 <button id="run-query">Run Query</button>
                 <div id="output-area"></div>
             </div>
@@ -54,15 +56,16 @@
         <div id="schema-content"></div>
     </div>
 
+
     <div id="data-model-sidebar" class="sidebar right-sidebar">
-        <div class="sidebar-header">
-            <h2>Entity-Relationship Diagram</h2>
-            <button id="close-erd" class="close-button">&times;</button>
+        <div class="close-button-container">
+            <button class="close-button" id="close-erd-btn">Close</button>
         </div>
         <div id="data-model-content">
-            <!-- We'll add the SVG for the data model here -->
+            <!-- SVG content goes here -->
         </div>
     </div>
+
 
     <script src="js/concepts.js" type="module"></script>
     <script src="js/database.js" type="module"></script>
