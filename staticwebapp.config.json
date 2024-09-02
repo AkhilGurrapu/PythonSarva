@@ -1,12 +1,15 @@
 {
-    "routes": [
-      {
-        "route": "/*",
-        "serve": "/index.html",
-        "statusCode": 200
-      }
-    ],
-    "navigationFallback": {
-      "rewrite": "/index.html"
+  "routes": [
+    {
+      "route": "/*",
+      "serve": "/index.html",
+      "statusCode": 200
     }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html"
+  },
+  "globalHeaders": {
+    "Access-Control-Allow-Origin": "https://www.datasarva.com"
   }
+}
