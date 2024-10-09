@@ -13,7 +13,7 @@ export const aggregateFunctions = {
         <li>NULL values are typically ignored (except in COUNT(*)).</li>
       </ul>
 
-      <h4 class="topic-subtitle">Syntax:</h4>
+      <h4 class="topic-subtitle">Basic Syntax:</h4>
       <pre class="topic-code">
 SELECT aggregate_function(column_name)
 FROM table_name
@@ -22,7 +22,9 @@ FROM table_name
       </pre>
 
       <h4 class="topic-subtitle">Example:</h4>
-      <pre class="topic-code">
+      <div class="code-container">
+        <button class="copy-btn">Copy</button>
+        <pre class="topic-code">
 SELECT 
   category,
   COUNT(*) as total_products,
@@ -31,6 +33,7 @@ SELECT
 FROM products
 GROUP BY category;
       </pre>
+      </div>
 
       <p class="topic-paragraph">This query summarizes product information by category, showing the count, average price, and maximum price for each category.</p>
 
@@ -39,10 +42,51 @@ GROUP BY category;
       </div>
     </div>
   `,
-  practice: `-- Calculate total sales and average order value
+  practice: `-- Calculate count of total sales
 SELECT 
-  COUNT(*) as total_orders,
-  SUM(total_price) as total_sales,
-  AVG(total_price) as average_order_value
+  COUNT(*) as total_orders
+FROM sales;`,
+  subConcepts: [
+    {
+      name: "COUNT",
+      query: `-- Count the number of products
+SELECT COUNT(*) as total_products
+FROM products;`
+    },
+    {
+      name: "SUM",
+      query: `-- Calculate the total revenue
+SELECT SUM(total_price) as total_revenue
 FROM sales;`
+    },
+    {
+      name: "AVG",
+      query: `-- Find the average product price
+SELECT AVG(price) as average_price
+FROM products;`
+    },
+    {
+      name: "MAX",
+      query: `-- Find the highest product price
+SELECT MAX(price) as highest_price
+FROM products;`
+    },
+    {
+      name: "MIN",
+      query: `-- Find the lowest product price
+SELECT MIN(price) as lowest_price
+FROM products;`
+    },
+    {
+      name: "GROUP BY with Aggregates",
+      query: `-- Summarize sales by category
+SELECT 
+  category,
+  COUNT(*) as total_sales,
+  SUM(total_price) as total_revenue
+FROM sales
+JOIN products ON sales.product_id = products.id
+GROUP BY category;`
+    }
+  ]
 };
