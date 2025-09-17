@@ -4,6 +4,7 @@ class LayoutManager {
     constructor() {
         this.isResizing = false;
         this.minColumnWidth = 300;
+        this.maxColumnWidth = window.innerWidth * 0.7; // Max 70% of screen width
         this.setupResizer();
         this.setupResponsiveLayout();
     }
@@ -40,25 +41,28 @@ class LayoutManager {
             const containerWidth = container.offsetWidth;
             const resizerWidth = resizer.offsetWidth;
             const availableWidth = containerWidth - resizerWidth;
+            this.maxColumnWidth = availableWidth * 0.7; // Update max width dynamically
 
             let newLeftWidth = startLeftWidth + dx;
             let newRightWidth = startRightWidth - dx;
 
-            // Enforce minimum widths
+            // Enforce minimum and maximum widths
             if (newLeftWidth < this.minColumnWidth) {
                 newLeftWidth = this.minColumnWidth;
+                newRightWidth = availableWidth - newLeftWidth;
+            } else if (newLeftWidth > this.maxColumnWidth) {
+                newLeftWidth = this.maxColumnWidth;
                 newRightWidth = availableWidth - newLeftWidth;
             } else if (newRightWidth < this.minColumnWidth) {
                 newRightWidth = this.minColumnWidth;
                 newLeftWidth = availableWidth - newRightWidth;
             }
 
-            // Calculate percentages
-            const leftPercent = (newLeftWidth / availableWidth) * 100;
-            const rightPercent = (newRightWidth / availableWidth) * 100;
+            // Calculate grid template columns
+            const leftFr = newLeftWidth / availableWidth;
+            const rightFr = newRightWidth / availableWidth;
 
-            leftColumn.style.flex = `0 0 ${leftPercent}%`;
-            rightColumn.style.flex = `0 0 ${rightPercent}%`;
+            container.style.gridTemplateColumns = `${leftFr}fr 4px ${rightFr}fr`;
 
             e.preventDefault();
         });
@@ -91,25 +95,28 @@ class LayoutManager {
             const containerWidth = container.offsetWidth;
             const resizerWidth = resizer.offsetWidth;
             const availableWidth = containerWidth - resizerWidth;
+            this.maxColumnWidth = availableWidth * 0.7; // Update max width dynamically
 
             let newLeftWidth = startLeftWidth + dx;
             let newRightWidth = startRightWidth - dx;
 
-            // Enforce minimum widths
+            // Enforce minimum and maximum widths
             if (newLeftWidth < this.minColumnWidth) {
                 newLeftWidth = this.minColumnWidth;
+                newRightWidth = availableWidth - newLeftWidth;
+            } else if (newLeftWidth > this.maxColumnWidth) {
+                newLeftWidth = this.maxColumnWidth;
                 newRightWidth = availableWidth - newLeftWidth;
             } else if (newRightWidth < this.minColumnWidth) {
                 newRightWidth = this.minColumnWidth;
                 newLeftWidth = availableWidth - newRightWidth;
             }
 
-            // Calculate percentages
-            const leftPercent = (newLeftWidth / availableWidth) * 100;
-            const rightPercent = (newRightWidth / availableWidth) * 100;
+            // Calculate grid template columns
+            const leftFr = newLeftWidth / availableWidth;
+            const rightFr = newRightWidth / availableWidth;
 
-            leftColumn.style.flex = `0 0 ${leftPercent}%`;
-            rightColumn.style.flex = `0 0 ${rightPercent}%`;
+            container.style.gridTemplateColumns = `${leftFr}fr 4px ${rightFr}fr`;
 
             e.preventDefault();
         });
@@ -142,39 +149,78 @@ class LayoutManager {
         if (!container || !leftColumn || !rightColumn || !resizer) return;
 
         const isMobile = window.innerWidth <= 768;
+        const isTablet = window.innerWidth <= 1024 && window.innerWidth > 768;
+
+        // Update max column width based on current screen size
+        this.maxColumnWidth = window.innerWidth * 0.7;
 
         if (isMobile) {
-            // Mobile layout
+            // Mobile layout - switch to flexbox
+            container.style.display = 'flex';
             container.style.flexDirection = 'column';
+            container.style.gridTemplateColumns = 'none';
             resizer.style.display = 'none';
-            leftColumn.style.flex = '0 0 40vh';
-            rightColumn.style.flex = '0 0 55vh';
+            leftColumn.style.gridColumn = 'unset';
+            rightColumn.style.gridColumn = 'unset';
+            leftColumn.style.flex = '0 0 auto';
+            rightColumn.style.flex = '1 1 auto';
             leftColumn.style.maxHeight = '40vh';
-            rightColumn.style.maxHeight = '55vh';
+            leftColumn.style.minHeight = '200px';
+            rightColumn.style.maxHeight = 'none';
+            rightColumn.style.minHeight = '300px';
         } else {
-            // Desktop layout
-            container.style.flexDirection = 'row';
+            // Desktop/Tablet layout - use CSS Grid
+            container.style.display = 'grid';
+            container.style.flexDirection = 'unset';
             resizer.style.display = 'block';
+            leftColumn.style.gridColumn = '1';
+            rightColumn.style.gridColumn = '3';
+            leftColumn.style.flex = 'unset';
+            rightColumn.style.flex = 'unset';
             leftColumn.style.maxHeight = 'none';
             rightColumn.style.maxHeight = 'none';
+            leftColumn.style.minHeight = 'auto';
+            rightColumn.style.minHeight = 'auto';
 
-            // Reset to default if no saved preferences
-            if (!this.hasLayoutPreferences()) {
-                leftColumn.style.flex = '1';
-                rightColumn.style.flex = '1';
+            // Reset to default if no saved preferences or on tablet
+            if (!this.hasLayoutPreferences() || isTablet) {
+                container.style.gridTemplateColumns = '1fr 4px 1fr';
+            }
+        }
+
+        // Ensure notebook and terminal containers are properly sized
+        const notebookContainer = document.getElementById('notebook-container');
+        const terminalContainer = document.getElementById('terminal-container');
+        
+        if (isMobile) {
+            if (notebookContainer) {
+                notebookContainer.style.maxHeight = 'none';
+                notebookContainer.style.height = 'auto';
+                notebookContainer.style.minHeight = '200px';
+            }
+            if (terminalContainer) {
+                terminalContainer.style.height = 'auto';
+                terminalContainer.style.minHeight = '200px';
+            }
+        } else {
+            if (notebookContainer) {
+                notebookContainer.style.maxHeight = 'calc(100vh - 250px)';
+                notebookContainer.style.minHeight = '400px';
+            }
+            if (terminalContainer) {
+                terminalContainer.style.height = 'auto';
+                terminalContainer.style.minHeight = '300px';
             }
         }
     }
 
     saveLayoutPreferences() {
-        const leftColumn = document.querySelector('.left-column');
-        const rightColumn = document.querySelector('.right-column');
+        const container = document.querySelector('.container');
 
-        if (!leftColumn || !rightColumn) return;
+        if (!container) return;
 
         const preferences = {
-            leftFlex: leftColumn.style.flex,
-            rightFlex: rightColumn.style.flex,
+            gridTemplateColumns: container.style.gridTemplateColumns,
             timestamp: Date.now()
         };
 
@@ -193,12 +239,10 @@ class LayoutManager {
             if (!saved) return;
 
             const preferences = JSON.parse(saved);
-            const leftColumn = document.querySelector('.left-column');
-            const rightColumn = document.querySelector('.right-column');
+            const container = document.querySelector('.container');
 
-            if (leftColumn && rightColumn && preferences.leftFlex && preferences.rightFlex) {
-                leftColumn.style.flex = preferences.leftFlex;
-                rightColumn.style.flex = preferences.rightFlex;
+            if (container && preferences.gridTemplateColumns) {
+                container.style.gridTemplateColumns = preferences.gridTemplateColumns;
             }
         } catch (error) {
             console.warn('Failed to load layout preferences:', error);
@@ -215,12 +259,10 @@ class LayoutManager {
     }
 
     resetLayout() {
-        const leftColumn = document.querySelector('.left-column');
-        const rightColumn = document.querySelector('.right-column');
+        const container = document.querySelector('.container');
 
-        if (leftColumn && rightColumn) {
-            leftColumn.style.flex = '1';
-            rightColumn.style.flex = '1';
+        if (container) {
+            container.style.gridTemplateColumns = '1fr 4px 1fr';
             this.saveLayoutPreferences();
         }
     }

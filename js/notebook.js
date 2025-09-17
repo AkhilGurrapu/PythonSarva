@@ -301,15 +301,8 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
 
             // Auto-scroll to show the executed cell output
             setTimeout(() => {
-                const container = this.container;
-                const cellRect = cellElement.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-
-                // Only scroll if cell is not fully visible
-                if (cellRect.bottom > containerRect.bottom || cellRect.top < containerRect.top) {
-                    cellElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            }, 100);
+                this.scrollToOutput(cellElement);
+            }, 200); // Increased delay to ensure content is rendered
 
             // Clear status after 4 seconds
             setTimeout(() => {
@@ -328,6 +321,11 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
             statusElement.innerHTML = '<i class="fas fa-times"></i> Error';
             statusElement.className = 'execution-status error';
             outputContainer.style.display = 'block';
+            
+            // Auto-scroll to show the error output
+            setTimeout(() => {
+                this.scrollToOutput(cellElement);
+            }, 200);
         }
     }
 
@@ -337,6 +335,38 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
             // Small delay between cells
             await new Promise(resolve => setTimeout(resolve, 100));
         }
+    }
+
+    scrollToOutput(cellElement) {
+        const container = this.container; // #notebook-container
+        const outputContainer = cellElement.querySelector('.cell-output-container');
+        
+        // Get the target element to scroll to
+        let targetElement;
+        if (outputContainer && outputContainer.style.display !== 'none') {
+            // Scroll to the output container if it has content
+            targetElement = outputContainer;
+        } else {
+            // Otherwise scroll to the cell itself
+            targetElement = cellElement;
+        }
+        
+        // Calculate the position to scroll to
+        const containerTop = container.scrollTop;
+        const containerHeight = container.clientHeight;
+        const targetTop = targetElement.offsetTop;
+        const targetHeight = targetElement.offsetHeight;
+        
+        // Calculate the ideal scroll position (center the target in the view)
+        const idealScrollTop = targetTop - (containerHeight / 2) + (targetHeight / 2);
+        
+        // Smooth scroll to the calculated position
+        container.scrollTo({
+            top: Math.max(0, idealScrollTop), // Don't scroll above the top
+            behavior: 'smooth'
+        });
+        
+        console.log(`Scrolling to: ${targetElement.className}, containerHeight: ${containerHeight}, targetTop: ${targetTop}, scrollTo: ${Math.max(0, idealScrollTop)}`);
     }
 
     deleteCell(cell) {
