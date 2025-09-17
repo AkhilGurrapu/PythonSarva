@@ -129,7 +129,6 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
 
     addCell(initialCode = '') {
         const cellId = `cell-${++this.cellCounter}`;
-        console.log(`➕ Adding cell ${cellId}:`, initialCode.substring(0, 50) + (initialCode.length > 50 ? '...' : ''));
         const cell = {
             id: cellId,
             code: initialCode,
@@ -140,7 +139,18 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
         };
 
         this.cells.push(cell);
-        this.renderCell(cell);
+        const cellElement = this.renderCell(cell);
+        
+        // Auto-scroll to the newly created cell
+        setTimeout(() => {
+            this.scrollToNewCell(cellElement);
+            // Focus on the new cell's textarea
+            const textarea = cellElement.querySelector('.cell-editor');
+            if (textarea) {
+                textarea.focus();
+            }
+        }, 100);
+        
         return cell;
     }
 
@@ -286,6 +296,11 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
         if (cell.isRunning) return;
 
         const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+        if (!cellElement) {
+            console.error(`❌ Cell element not found for cell ID: ${cell.id}`);
+            return;
+        }
+        
         const statusElement = cellElement.querySelector('.execution-status');
         const outputContainer = cellElement.querySelector('.cell-output-container');
         const outputElement = cellElement.querySelector('.cell-output');
@@ -336,8 +351,12 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
 
             // Auto-scroll to show the executed cell output
             setTimeout(() => {
-                this.scrollToOutput(cellElement);
-            }, 200); // Increased delay to ensure content is rendered
+                // Get a fresh reference to ensure we have the correct cell element
+                const targetCellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+                if (targetCellElement) {
+                    this.scrollToOutput(targetCellElement);
+                }
+            }, 300); // Slightly longer delay to ensure content is fully rendered
 
             // Clear status after 4 seconds
             setTimeout(() => {
@@ -359,8 +378,12 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
             
             // Auto-scroll to show the error output
             setTimeout(() => {
-                this.scrollToOutput(cellElement);
-            }, 200);
+                // Get a fresh reference to ensure we have the correct cell element
+                const targetCellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+                if (targetCellElement) {
+                    this.scrollToOutput(targetCellElement);
+                }
+            }, 300);
         }
     }
 
@@ -386,22 +409,35 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
             targetElement = cellElement;
         }
         
-        // Calculate the position to scroll to
-        const containerTop = container.scrollTop;
-        const containerHeight = container.clientHeight;
-        const targetTop = targetElement.offsetTop;
-        const targetHeight = targetElement.offsetHeight;
+        // Simple approach: just scroll so the target element is visible
+        // This is more reliable than complex centering calculations
+        targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest', // Don't scroll if already visible
+            inline: 'nearest'
+        });
         
-        // Calculate the ideal scroll position (center the target in the view)
-        const idealScrollTop = targetTop - (containerHeight / 2) + (targetHeight / 2);
+        console.log(`✅ scrollToOutput: Scrolled to element using scrollIntoView`);
+    }
+
+    scrollToNewCell(cellElement) {
+        const container = this.container; // #notebook-container
+        
+        // Calculate the position to scroll to the new cell
+        const containerHeight = container.clientHeight;
+        const cellTop = cellElement.offsetTop;
+        const cellHeight = cellElement.offsetHeight;
+        
+        // Calculate scroll position to show the new cell at the bottom of the viewport
+        const idealScrollTop = cellTop + cellHeight - containerHeight + 20; // 20px padding
         
         // Smooth scroll to the calculated position
         container.scrollTo({
-            top: Math.max(0, idealScrollTop), // Don't scroll above the top
+            top: Math.max(0, idealScrollTop),
             behavior: 'smooth'
         });
         
-        console.log(`Scrolling to: ${targetElement.className}, containerHeight: ${containerHeight}, targetTop: ${targetTop}, scrollTo: ${Math.max(0, idealScrollTop)}`);
+        console.log(`Scrolling to new cell: cellTop: ${cellTop}, cellHeight: ${cellHeight}, scrollTo: ${Math.max(0, idealScrollTop)}`);
     }
 
     deleteCell(cell) {
