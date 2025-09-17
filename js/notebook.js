@@ -179,7 +179,7 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
                 <div class="execution-status"></div>
             </div>
             <div class="cell-input">
-                <textarea class="cell-editor" placeholder="# Write your Python code here...">${cell.code}</textarea>
+                <textarea class="cell-editor" id="editor-${cell.id}" name="code-${cell.id}" placeholder="# Write your Python code here...">${cell.code}</textarea>
             </div>
             <div class="cell-output-container" style="display: ${cell.output || cell.error ? 'block' : 'none'}">
                 <div class="cell-output-label">Out [${cell.executionCount || ' '}]:</div>
