@@ -2,12 +2,16 @@ import { PythonEngine } from './python-engine.js';
 
 class NotebookInterface {
     constructor(pythonEngine) {
+        console.log('🏗️ NotebookInterface constructor called');
         this.pythonEngine = pythonEngine;
         this.cells = [];
         this.cellCounter = 0;
         this.container = document.getElementById('notebook-container');
+        this.hasAddedDefaultCell = false; // Track if default cell was already added
         this.setupEventListeners();
-        this.addInitialCell();
+        console.log('📱 Event listeners set up');
+        // Don't add initial cell here - let the loading process handle it
+        console.log('✅ NotebookInterface constructor completed');
     }
 
     setupEventListeners() {
@@ -20,81 +24,112 @@ class NotebookInterface {
 
 
     addInitialCell() {
+        console.log('🚀 addInitialCell called');
         // Clear any existing cells first
         this.clearAllCells();
 
         // Load examples from current concept
         this.loadConceptExamples();
+        console.log('✅ addInitialCell completed');
     }
 
     clearAllCells() {
+        console.log('🗑️ Clearing all cells. Current count:', this.cells.length);
         this.cells = [];
         this.cellCounter = 0;
+        this.hasAddedDefaultCell = false; // Reset the flag when clearing
         this.rerenderNotebook();
+        console.log('✅ All cells cleared. New count:', this.cells.length);
     }
 
     loadConceptExamples() {
+        console.log('🎯 loadConceptExamples called');
         try {
             // Get current concept from the global scope (defined in concepts.js)
+            console.log('📊 Global state check:', {
+                hasPythonConcepts: !!window.pythonConcepts,
+                currentConceptIndex: window.currentConceptIndex,
+                currentSubConceptIndex: window.currentSubConceptIndex
+            });
+
             if (window.pythonConcepts && typeof window.currentConceptIndex !== 'undefined' && typeof window.currentSubConceptIndex !== 'undefined') {
                 const currentConcept = window.pythonConcepts[window.currentConceptIndex];
+                console.log('📖 Current concept:', currentConcept?.title);
+                
                 if (currentConcept && currentConcept.subConcepts && currentConcept.subConcepts[window.currentSubConceptIndex]) {
                     const currentSubConcept = currentConcept.subConcepts[window.currentSubConceptIndex];
 
-                    console.log('Loading examples for:', currentSubConcept.title);
-                    console.log('Has exampleCode:', !!currentSubConcept.exampleCode);
+                    console.log('📝 Loading examples for:', currentSubConcept.title);
+                    console.log('📋 Has exampleCode:', !!currentSubConcept.exampleCode);
+                    console.log('📋 ExampleCode length:', currentSubConcept.exampleCode?.length);
 
                     if (currentSubConcept.exampleCode) {
-                        // Split the example code by triple newlines to create separate cells
-                        const codeBlocks = currentSubConcept.exampleCode.split('\n\n\n');
-
-                        codeBlocks.forEach((block, index) => {
-                            if (block.trim()) {
-                                console.log(`Adding cell ${index + 1}:`, block.substring(0, 50) + '...');
+                        // Try to split the example code by triple newlines first
+                        const codeBlocks = currentSubConcept.exampleCode.split('\n\n\n').filter(block => block.trim());
+                        console.log('🔀 Code blocks found:', codeBlocks.length);
+                        
+                        if (codeBlocks.length > 1) {
+                            // Multiple blocks found - add each as separate cells
+                            console.log('➕ Adding multiple blocks as separate cells');
+                            codeBlocks.forEach((block, index) => {
+                                console.log(`➕ Adding block ${index + 1}:`, block.substring(0, 50) + '...');
                                 this.addCell(block.trim());
-                            }
-                        });
-
-                        // If no blocks were created, add the entire example as one cell
-                        if (codeBlocks.length === 1 || codeBlocks.every(block => !block.trim())) {
-                            console.log('Adding single cell with full example code');
+                            });
+                        } else {
+                            // Single block - add as one cell
+                            console.log('➕ Adding single cell with example code');
                             this.addCell(currentSubConcept.exampleCode.trim());
                         }
                     } else {
-                        console.log('No example code found, using fallback');
+                        console.log('⚠️ No example code found, using fallback');
                         this.addDefaultWelcomeCell();
                     }
                 } else {
-                    console.log('No subconcept found, using fallback');
+                    console.log('⚠️ No subconcept found, using fallback');
                     this.addDefaultWelcomeCell();
                 }
             } else {
-                console.log('Global variables not available, using fallback');
+                console.log('⚠️ Global variables not available, using fallback');
                 this.addDefaultWelcomeCell();
             }
         } catch (error) {
-            console.warn('Failed to load concept examples:', error);
+            console.warn('❌ Failed to load concept examples:', error);
             this.addDefaultWelcomeCell();
         }
+        console.log('✅ loadConceptExamples completed. Total cells:', this.cells.length);
     }
 
     addDefaultWelcomeCell() {
+        console.log('🏠 addDefaultWelcomeCell called');
+        if (this.hasAddedDefaultCell) {
+            console.log('⚠️ Default cell already added, skipping');
+            return;
+        }
+        console.log('📊 Current cells count before adding default:', this.cells.length);
+        this.hasAddedDefaultCell = true;
         this.addCell(`# 🐍 Welcome to Python Learner!
 # This interactive notebook will populate with examples from the current concept
 # Click "Run" or press Ctrl+Enter to execute cells
 
 print("Hello, Python World! 🌍")
 print("Navigate through concepts on the left to see relevant examples here!")`);
+        console.log('📊 Current cells count after adding default:', this.cells.length);
     }
 
     // Method to refresh notebook when concept changes
     refreshWithCurrentConcept() {
+        console.log('🔄 refreshWithCurrentConcept called');
+        console.log('📝 Current cells before clear:', this.cells.length);
+        this.clearAllCells(); // Clear existing cells first
+        console.log('🗑️ Cells after clear:', this.cells.length);
         this.loadConceptExamples();
+        console.log('➕ Cells after loading examples:', this.cells.length);
     }
 
 
     addCell(initialCode = '') {
         const cellId = `cell-${++this.cellCounter}`;
+        console.log(`➕ Adding cell ${cellId}:`, initialCode.substring(0, 50) + (initialCode.length > 50 ? '...' : ''));
         const cell = {
             id: cellId,
             code: initialCode,
@@ -590,18 +625,22 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
     }
 
     loadNotebook(data) {
+        console.log('📖 loadNotebook called with data:', !!data);
         this.cells = [];
         this.container.innerHTML = '';
 
         if (data.cells && data.cells.length > 0) {
+            console.log('📋 Loading', data.cells.length, 'saved cells');
             data.cells.forEach(cellData => {
                 const cell = this.addCell(cellData.code);
                 cell.output = cellData.output || '';
                 cell.error = cellData.error || null;
             });
         } else {
-            this.addInitialCell();
+            console.log('📝 No saved cells found - notebook will be populated by concept loading');
+            // Don't add initial cell here - let the concept system handle it
         }
+        console.log('✅ loadNotebook completed. Total cells:', this.cells.length);
     }
 
     getCellsData() {

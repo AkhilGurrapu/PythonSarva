@@ -45,11 +45,15 @@ class PythonLearnerApp {
             );
 
             // Load saved data
-            this.loadSavedData();
+            const hasLoadedProgress = this.loadSavedData();
 
             // Initialize concepts
             populateTopicList();
-            showConcept(0, 0);
+            
+            // Only show initial concept if no progress was loaded
+            if (!hasLoadedProgress) {
+                showConcept(0, 0);
+            }
 
             // Initialize packages sidebar
             this.initializePackagesSidebar();
@@ -253,6 +257,7 @@ class PythonLearnerApp {
     }
 
     loadSavedData() {
+        let hasLoadedProgress = false;
         try {
             // Load notebook data
             const notebookData = this.storageManager.loadNotebook();
@@ -270,11 +275,13 @@ class PythonLearnerApp {
             const progress = this.storageManager.loadProgress();
             if (progress) {
                 showConcept(progress.currentConcept, progress.currentSubConcept);
+                hasLoadedProgress = true;
             }
 
         } catch (error) {
             console.error('Failed to load saved data:', error);
         }
+        return hasLoadedProgress;
     }
 
     showMessage(message, type = 'info') {
