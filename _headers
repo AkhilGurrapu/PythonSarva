@@ -1,0 +1,28 @@
+# Headers for Netlify (if netlify.toml is not used)
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+
+/*.js
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=86400
+
+/*.css
+  Cache-Control: public, max-age=86400
+
+/*.html
+  Cache-Control: public, max-age=3600
+
+/*.png
+  Cache-Control: public, max-age=31536000
+
+/*.jpg
+  Cache-Control: public, max-age=31536000
+
+/*.ico
+  Cache-Control: public, max-age=31536000

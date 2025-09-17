@@ -1,0 +1,52 @@
+{
+  "name": "python-learner",
+  "version": "1.0.0",
+  "description": "Interactive browser-based Python learning platform with zero backend requirements",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "serve": "npx serve .",
+    "build": "echo 'No build step required - static files only'",
+    "test": "echo 'No tests configured yet'",
+    "deploy:netlify": "netlify deploy --prod",
+    "deploy:vercel": "vercel --prod"
+  },
+  "keywords": [
+    "python",
+    "learning",
+    "education",
+    "pyodide",
+    "webassembly",
+    "browser",
+    "jupyter",
+    "notebook",
+    "repl",
+    "interactive",
+    "zero-backend"
+  ],
+  "author": {
+    "name": "Python Learner Team",
+    "email": "contact@example.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/python-learner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/python-learner/issues"
+  },
+  "homepage": "https://your-username.github.io/python-learner",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  },
+  "browserslist": [
+    "Chrome >= 67",
+    "Firefox >= 68",
+    "Safari >= 14",
+    "Edge >= 79"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

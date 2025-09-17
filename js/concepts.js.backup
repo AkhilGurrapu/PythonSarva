@@ -1937,13 +1937,8 @@ print("🏗️ OOP fundamentals learned!")`
 
 // Combine all topics
 pythonConcepts.push(...intermediateTopics, ...advancedTopics);
-
-// Make these globally accessible for notebook refresh
-window.pythonConcepts = pythonConcepts;
 let currentConceptIndex = 0;
 let currentSubConceptIndex = 0;
-window.currentConceptIndex = currentConceptIndex;
-window.currentSubConceptIndex = currentSubConceptIndex;
 
 // Progress tracking
 let userProgress = {
@@ -2046,10 +2041,6 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
     currentConceptIndex = conceptIndex;
     currentSubConceptIndex = subConceptIndex;
 
-    // Update global references for notebook refresh
-    window.currentConceptIndex = currentConceptIndex;
-    window.currentSubConceptIndex = currentSubConceptIndex;
-
     const concept = pythonConcepts[conceptIndex];
     if (!concept) return;
 
@@ -2104,7 +2095,7 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
                             <div class="code-language">
                                 Python Example
                             </div>
-                            <button class="copy-btn" data-code="${subConcept.exampleCode.replace(/"/g, '&quot;')}">
+                            <button class="copy-btn" onclick="copyToClipboard(this, \`${subConcept.exampleCode.replace(/\`/g, '\\`').replace(/\$/g, '\\$')}\`)">
                                 <i class="fas fa-copy"></i> Copy Code
                             </button>
                         </div>
@@ -2134,19 +2125,11 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
         `;
     }
 
-    // Setup copy button event listeners
-    setupCopyButtonListeners();
-
     // Update sub-concept buttons
     updateSubConceptButtons(concept);
 
     // Update navigation buttons
     updateNavigationButtons();
-
-    // Refresh notebook with current concept examples
-    if (window.notebookInterface && typeof window.notebookInterface.refreshWithCurrentConcept === 'function') {
-        window.notebookInterface.refreshWithCurrentConcept();
-    }
 }
 
 function updateSubConceptButtons(concept) {
@@ -2364,17 +2347,7 @@ function copyToClipboard(button, code) {
             button.classList.remove('copied');
         }, 2000);
     }).catch(err => {
-        console.error('Failed to copy code:', err);
-    });
-}
-
-function setupCopyButtonListeners() {
-    const copyButtons = document.querySelectorAll('.copy-btn');
-    copyButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const code = button.getAttribute('data-code').replace(/&quot;/g, '"');
-            copyToClipboard(button, code);
-        });
+        console.error('Failed to copy text: ', err);
     });
 }
 

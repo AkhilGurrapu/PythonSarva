@@ -1,56 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Learning Platform</title>
-    
+    <title>Python Learning Platform</title>
+
     <!-- Favicon -->
-    <link rel="icon" type="image/jpg" href="./images/DataSarva.jpg">
-    
+    <!-- <link rel="icon" type="image/jpg" href="./images/DataSarva.jpg"> -->
+
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="SQL Learner">
-    <meta property="og:description" content="Learn SQL interactively with our SQL Learning Platform">
+    <meta property="og:title" content="Python Learner">
+    <meta property="og:description" content="Learn Python interactively with our Python Learning Platform">
     <meta property="og:image" content="https://www.datasarva.com/images/datasarvanew.jpg">
-    <meta property="og:url" content="https://sql.datasarva.com">
+    <meta property="og:url" content="https://python.datasarva.com">
     <meta property="og:type" content="website">
-    
+
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="SQL Learner">
-    <meta name="twitter:description" content="Learn SQL interactively with our SQL Learner app">
+    <meta name="twitter:title" content="Python Learner">
+    <meta name="twitter:description" content="Learn Python interactively with our Python Learner app">
     <meta name="twitter:image" content="https://www.datasarva.com/images/datasarvanew.jpg">
-    
+
     <link rel="stylesheet" href="./css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.0.1/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.0.1/theme/dracula.min.css">
+
+    <!-- Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.28.2/full/pyodide.js"></script>
 </head>
 <body>
     <header>
-        <button id="toggle-topics" class="sidebar-toggle"><i class="fas fa-bars"> <span>Topics</span> </i></button>
+        <button id="toggle-topics" class="sidebar-toggle">
+            <i class="fas fa-bars"></i> <span>Topics</span>
+        </button>
         <div class="logo">
-            <i class="fas fa-database"></i> SQL Learner
+            <i class="fab fa-python"></i> Python Learner
         </div>
-        <button id="preview-schema" class="sidebar-toggle"><i class="fas fa-table"> <span>Schema</span> </i></button>
+        <div class="mode-switcher">
+            <button id="notebook-mode" class="mode-btn active">
+                <i class="fas fa-book"></i> Notebook
+            </button>
+            <button id="terminal-mode" class="mode-btn">
+                <i class="fas fa-terminal"></i> Terminal
+            </button>
+        </div>
+        <button id="preview-packages" class="sidebar-toggle">
+            <i class="fas fa-box"></i> <span>Packages</span>
+        </button>
     </header>
 
     <div class="sidebar left-sidebar" id="topics-sidebar">
-        <h2>SQL Topics</h2>
+        <h2>Python Topics</h2>
         <ul id="topic-list">
-            <!-- SQL topics will be dynamically added here -->
+            <!-- Python topics will be dynamically added here -->
         </ul>
     </div>
 
     <div class="main-content">
         <div class="container">
             <div class="left-column">
-                <h2>SQL Concepts</h2>
+                <h2>Python Concepts</h2>
                 <div class="concept-slider">
                     <button id="prev-concept" class="slider-btn"><i class="fas fa-arrow-left"></i></button>
-                    <div id="current-concept">SELECT Statements</div>
+                    <div id="current-concept">Introduction to Python</div>
                     <button id="next-concept" class="slider-btn"><i class="fas fa-arrow-right"></i></button>
                 </div>
                 <div id="concept-content"></div>
@@ -58,36 +71,76 @@
             <div id="resizer"></div>
             <div class="right-column">
                 <div id="sub-concept-buttons"></div>
-                <div class="sql-editor-container">
-                    <textarea id="sql-editor"></textarea>
+
+                <!-- Notebook Mode -->
+                <div id="notebook-interface" class="python-interface active">
+                    <div class="notebook-controls">
+                        <button id="add-cell" class="control-btn"><i class="fas fa-plus"></i> Add Cell</button>
+                        <button id="run-all" class="control-btn"><i class="fas fa-play"></i> Run All</button>
+                        <button id="clear-output" class="control-btn"><i class="fas fa-trash"></i> Clear Output</button>
+                        <button id="export-notebook" class="control-btn"><i class="fas fa-download"></i> Export</button>
+                        <button id="open-colab" class="control-btn colab-btn">
+                            <i class="fab fa-google"></i> Open in Colab
+                        </button>
+                    </div>
+                    <div id="notebook-container">
+                        <!-- Notebook cells will be added here -->
+                    </div>
                 </div>
-                
-                <button id="run-query">Run Query</button>
-                <div id="output-area"></div>
+
+                <!-- Terminal Mode -->
+                <div id="terminal-interface" class="python-interface">
+                    <div class="terminal-controls">
+                        <button id="clear-terminal" class="control-btn"><i class="fas fa-trash"></i> Clear</button>
+                        <button id="reset-python" class="control-btn"><i class="fas fa-refresh"></i> Reset</button>
+                        <button id="save-session" class="control-btn"><i class="fas fa-save"></i> Save Session</button>
+                    </div>
+                    <div id="terminal-container">
+                        <div id="terminal-output"></div>
+                        <div class="terminal-input">
+                            <span class="prompt">>>> </span>
+                            <textarea id="terminal-editor" placeholder="Type Python code here..."></textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     <div class="overlay"></div>
-    <div class="sidebar right-sidebar" id="schema-sidebar">
-        <h2>Database Schema</h2>
-        <button id="preview-erd" class="erd-button" title="View Entity-Relationship Diagram">Model View</button>
-        <div id="schema-content"></div>
+
+    <div class="sidebar right-sidebar" id="packages-sidebar">
+        <h2>Available Packages</h2>
+        <div class="package-search">
+            <input type="text" id="package-search" placeholder="Search packages...">
+            <button id="install-package" class="control-btn"><i class="fas fa-download"></i> Install</button>
+        </div>
+        <div id="packages-content">
+            <div class="package-category">
+                <h3>Pre-installed</h3>
+                <ul id="preinstalled-packages"></ul>
+            </div>
+            <div class="package-category">
+                <h3>Available</h3>
+                <ul id="available-packages"></ul>
+            </div>
+        </div>
     </div>
 
-    <div id="data-model-sidebar" class="sidebar right-sidebar">
-        <div class="close-button-container">
-            <button class="close-button" id="close-erd-btn">Close</button>
-        </div>
-        <div id="data-model-content">
-            <!-- SVG content goes here -->
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Loading Python environment...</p>
         </div>
     </div>
 
     <script src="./js/concepts.js" type="module"></script>
-    <script src="./js/database.js" type="module"></script>
+    <script src="./js/python-engine.js" type="module"></script>
+    <script src="./js/notebook.js" type="module"></script>
+    <script src="./js/terminal.js" type="module"></script>
+    <script src="./js/storage.js" type="module"></script>
     <script src="./js/main.js" type="module"></script>
     <script src="./js/layout.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/sql/sql.min.js"></script>
 </body>
 </html>

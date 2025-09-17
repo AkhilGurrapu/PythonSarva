@@ -1,0 +1,854 @@
+import { PythonEngine } from './python-engine.js';
+
+class NotebookInterface {
+    constructor(pythonEngine) {
+        this.pythonEngine = pythonEngine;
+        this.cells = [];
+        this.cellCounter = 0;
+        this.container = document.getElementById('notebook-container');
+        this.setupEventListeners();
+        this.addInitialCell();
+    }
+
+    setupEventListeners() {
+        document.getElementById('add-cell').addEventListener('click', () => this.addCell());
+        document.getElementById('run-all').addEventListener('click', () => this.runAllCells());
+        document.getElementById('clear-output').addEventListener('click', () => this.clearAllOutput());
+        document.getElementById('export-notebook').addEventListener('click', () => this.exportNotebook());
+        document.getElementById('open-colab').addEventListener('click', () => this.openInColab());
+    }
+
+
+    addInitialCell() {
+        this.addCell(`# 🐍 Welcome to Python Learner!
+# This is an interactive Python notebook running in your browser
+# Click "Run" or press Ctrl+Enter to execute this cell
+
+print("Hello, Python World! 🌍")
+print("Python version:", __import__('sys').version)
+
+# Let's do some basic math
+result = 2 + 2
+print(f"2 + 2 = {result}")
+
+# Create a simple list and iterate
+fruits = ['apple', 'banana', 'orange', 'grape']
+print("\\nFruits I like:")
+for i, fruit in enumerate(fruits, 1):
+    print(f"{i}. {fruit.title()}")
+
+# Try some Python magic! 🎭
+print("\\n" + "="*30)
+print("Welcome to your Python journey!")
+print("="*30)`);
+    }
+
+    addExampleCell(exampleType) {
+        const examples = {
+            'hello-world': `# 🌍 Hello World Examples
+print("Hello, World!")
+print("Hello, Python!")
+print("Hello, " + "Developer!")
+
+# Using variables in greetings
+name = "Python Learner"
+print(f"Hello, {name}!")
+
+# Multiple greetings
+greetings = ["Hello", "Hi", "Hey", "Greetings"]
+for greeting in greetings:
+    print(f"{greeting}, World!")`,
+
+            'variables': `# 📝 Variables and Data Types
+
+# Numbers
+age = 25
+height = 5.8
+temperature = -10.5
+print(f"Age: {age}, Height: {height}, Temperature: {temperature}")
+
+# Strings
+name = "Alice"
+city = 'New York'
+message = """This is a
+multi-line string"""
+print(f"Name: {name}, City: {city}")
+print(message)
+
+# Booleans
+is_student = True
+is_working = False
+print(f"Is student: {is_student}, Is working: {is_working}")
+
+# Check data types
+print(f"Type of age: {type(age)}")
+print(f"Type of name: {type(name)}")
+print(f"Type of is_student: {type(is_student)}")`,
+
+            'math': `# 🧮 Mathematical Operations
+
+# Basic arithmetic
+a = 10
+b = 3
+print(f"Addition: {a} + {b} = {a + b}")
+print(f"Subtraction: {a} - {b} = {a - b}")
+print(f"Multiplication: {a} * {b} = {a * b}")
+print(f"Division: {a} / {b} = {a / b}")
+print(f"Floor division: {a} // {b} = {a // b}")
+print(f"Modulus: {a} % {b} = {a % b}")
+print(f"Power: {a} ** {b} = {a ** b}")
+
+# Math functions
+import math
+num = 16
+print(f"\\nSquare root of {num}: {math.sqrt(num)}")
+print(f"Ceiling of 3.2: {math.ceil(3.2)}")
+print(f"Floor of 3.8: {math.floor(3.8)}")
+print(f"Pi: {math.pi}")
+
+# Random numbers
+import random
+print(f"\\nRandom number (1-100): {random.randint(1, 100)}")
+print(f"Random choice from list: {random.choice(['apple', 'banana', 'cherry'])}")`,
+
+            'lists': `# 📋 Lists and Loops
+
+# Creating lists
+fruits = ['apple', 'banana', 'cherry', 'date']
+numbers = [1, 2, 3, 4, 5]
+mixed = ['hello', 42, True, 3.14]
+
+print("Original fruits:", fruits)
+
+# List operations
+fruits.append('elderberry')
+print("After adding elderberry:", fruits)
+
+fruits.insert(1, 'apricot')
+print("After inserting apricot:", fruits)
+
+# Accessing elements
+print(f"\\nFirst fruit: {fruits[0]}")
+print(f"Last fruit: {fruits[-1]}")
+print(f"Fruits 1-3: {fruits[1:4]}")
+
+# Looping through lists
+print("\\nAll fruits:")
+for i, fruit in enumerate(fruits):
+    print(f"{i+1}. {fruit.title()}")
+
+# List comprehensions
+squares = [x**2 for x in range(1, 6)]
+print(f"\\nSquares: {squares}")
+
+even_fruits = [fruit for fruit in fruits if len(fruit) % 2 == 0]
+print(f"Fruits with even length: {even_fruits}")`,
+
+            'dictionaries': `# 📚 Dictionaries - Key-Value Pairs
+
+# Creating a dictionary
+student = {
+    'name': 'Alice Johnson',
+    'age': 20,
+    'grade': 'A',
+    'subjects': ['Math', 'Physics', 'Chemistry']
+}
+
+print("Student info:", student)
+print(f"Name: {student['name']}")
+print(f"Age: {student['age']}")
+
+# Adding and updating
+student['email'] = 'alice@email.com'
+student['age'] = 21
+print("\\nUpdated student:", student)
+
+# Dictionary methods
+print(f"\\nKeys: {list(student.keys())}")
+print(f"Values: {list(student.values())}")
+
+# Looping through dictionaries
+print("\\nAll student data:")
+for key, value in student.items():
+    print(f"{key.title()}: {value}")
+
+# Nested dictionaries
+classroom = {
+    'student1': {'name': 'Alice', 'grade': 'A'},
+    'student2': {'name': 'Bob', 'grade': 'B'},
+    'student3': {'name': 'Charlie', 'grade': 'A+'}
+}
+
+print("\\nClassroom grades:")
+for student_id, info in classroom.items():
+    print(f"{info['name']}: {info['grade']}")`,
+
+            'functions': `# 🔧 Functions - Reusable Code Blocks
+
+# Simple function
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("Alice"))
+print(greet("Bob"))
+
+# Function with multiple parameters
+def calculate_area(length, width):
+    area = length * width
+    return area
+
+print(f"\\nArea of 5x3 rectangle: {calculate_area(5, 3)}")
+
+# Function with default parameters
+def introduce(name, age=25, city="Unknown"):
+    return f"Hi, I'm {name}, {age} years old from {city}"
+
+print("\\n" + introduce("Alice"))
+print(introduce("Bob", 30))
+print(introduce("Charlie", 28, "New York"))
+
+# Function returning multiple values
+def get_name_parts(full_name):
+    parts = full_name.split()
+    return parts[0], parts[-1]
+
+first, last = get_name_parts("Alice Johnson")
+print(f"\\nFirst name: {first}, Last name: {last}")
+
+# Lambda functions (anonymous functions)
+square = lambda x: x**2
+print(f"\\nSquare of 5: {square(5)}")
+
+# Using lambda with built-in functions
+numbers = [1, 2, 3, 4, 5]
+squared = list(map(lambda x: x**2, numbers))
+print(f"Squared numbers: {squared}")`,
+
+            'classes': `# 🏗️ Classes and Object-Oriented Programming
+
+# Simple class
+class Dog:
+    def __init__(self, name, breed):
+        self.name = name
+        self.breed = breed
+        self.age = 0
+
+    def bark(self):
+        return f"{self.name} says Woof!"
+
+    def birthday(self):
+        self.age += 1
+        return f"Happy birthday {self.name}! Now {self.age} years old."
+
+# Creating objects
+dog1 = Dog("Buddy", "Golden Retriever")
+dog2 = Dog("Max", "German Shepherd")
+
+print(dog1.bark())
+print(dog2.bark())
+print(dog1.birthday())
+
+# More complex class with inheritance
+class Animal:
+    def __init__(self, name, species):
+        self.name = name
+        self.species = species
+
+    def make_sound(self):
+        return f"{self.name} makes a sound"
+
+class Cat(Animal):
+    def __init__(self, name, color):
+        super().__init__(name, "Cat")
+        self.color = color
+
+    def make_sound(self):
+        return f"{self.name} says Meow!"
+
+    def purr(self):
+        return f"{self.name} is purring..."
+
+# Using inheritance
+cat = Cat("Whiskers", "Orange")
+print(f"\\n{cat.make_sound()}")
+print(cat.purr())
+print(f"{cat.name} is a {cat.color} {cat.species}")`,
+
+            'files': `# 📁 File Handling
+
+# Writing to a file
+data_to_write = """This is line 1
+This is line 2
+This is line 3
+Python is awesome!"""
+
+# Note: In browser environment, we'll simulate file operations
+print("Simulating file operations (actual files not created in browser):")
+
+# Simulate writing
+print("\\n📝 Writing to file:")
+print("Content to write:")
+print(data_to_write)
+
+# Simulate reading
+print("\\n📖 Reading from file:")
+lines = data_to_write.split('\\n')
+for i, line in enumerate(lines, 1):
+    print(f"Line {i}: {line}")
+
+# Working with CSV-like data
+import io
+csv_data = """Name,Age,City
+Alice,25,New York
+Bob,30,San Francisco
+Charlie,28,Chicago"""
+
+print("\\n📊 Processing CSV data:")
+lines = csv_data.strip().split('\\n')
+headers = lines[0].split(',')
+print("Headers:", headers)
+
+print("\\nData:")
+for line in lines[1:]:
+    values = line.split(',')
+    person = dict(zip(headers, values))
+    print(f"{person['Name']} is {person['Age']} years old and lives in {person['City']}")`,
+
+            'visualization': `# 📊 Data Visualization (Matplotlib simulation)
+
+# Note: In browser environment, we'll simulate matplotlib
+print("📈 Data Visualization Examples")
+print("Note: This simulates plotting - actual plots need matplotlib")
+
+# Sample data
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+sales = [2400, 1398, 9800, 1400, 2800, 3200]
+expenses = [2000, 1200, 7000, 1100, 2200, 2800]
+
+print(f"\\n📅 Months: {months}")
+print(f"💰 Sales: {sales}")
+print(f"💸 Expenses: {expenses}")
+
+# Calculate profits
+profits = [s - e for s, e in zip(sales, expenses)]
+print(f"📈 Profits: {profits}")
+
+# Find best and worst months
+best_month_idx = profits.index(max(profits))
+worst_month_idx = profits.index(min(profits))
+
+print(f"\\n🥇 Best month: {months[best_month_idx]} (${profits[best_month_idx]})")
+print(f"🥉 Worst month: {months[worst_month_idx]} (${profits[worst_month_idx]})")
+
+# Simple ASCII bar chart
+print("\\n📊 Simple ASCII Bar Chart (Sales):")
+max_sales = max(sales)
+for month, sale in zip(months, sales):
+    bar_length = int((sale / max_sales) * 30)
+    bar = '█' * bar_length
+    print(f"{month}: {bar} ({sale})")
+
+# If you want real plotting, install matplotlib:
+print("\\n💡 To create real plots, try:")
+print("import micropip")
+print("await micropip.install('matplotlib')")
+print("import matplotlib.pyplot as plt")
+print("plt.plot(months, sales)")
+print("plt.show()")`
+        };
+
+        const code = examples[exampleType] || '# Example not found';
+        this.addCell(code);
+    }
+
+    addCell(initialCode = '') {
+        const cellId = `cell-${++this.cellCounter}`;
+        const cell = {
+            id: cellId,
+            code: initialCode,
+            output: '',
+            error: null,
+            isRunning: false,
+            executionCount: null
+        };
+
+        this.cells.push(cell);
+        this.renderCell(cell);
+        return cell;
+    }
+
+    renderCell(cell) {
+        const cellElement = document.createElement('div');
+        cellElement.className = 'notebook-cell';
+        cellElement.dataset.cellId = cell.id;
+
+        cellElement.innerHTML = `
+            <div class="cell-controls">
+                <button class="cell-btn run-cell" title="Run Cell (Ctrl+Enter)">
+                    <i class="fas fa-play"></i> Run
+                </button>
+                <button class="cell-btn delete-cell" title="Delete Cell (Ctrl+D)">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="cell-btn move-up" title="Move Up">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+                <button class="cell-btn move-down" title="Move Down">
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+            </div>
+            <div class="cell-header">
+                <span class="cell-label">In [${cell.executionCount || ' '}]:</span>
+                <div class="execution-status"></div>
+            </div>
+            <div class="cell-input">
+                <textarea class="cell-editor" placeholder="# Write your Python code here...">${cell.code}</textarea>
+            </div>
+            <div class="cell-output-container" style="display: ${cell.output || cell.error ? 'block' : 'none'}">
+                <div class="cell-output-label">Out [${cell.executionCount || ' '}]:</div>
+                <div class="cell-output ${cell.error ? 'error' : ''}">${this.formatOutput(cell.output || cell.error || '')}</div>
+            </div>
+        `;
+
+        this.container.appendChild(cellElement);
+        this.setupCellEventListeners(cellElement, cell);
+        this.setupCodeEditor(cellElement, cell);
+
+        return cellElement;
+    }
+
+    setupCellEventListeners(cellElement, cell) {
+        // Run cell
+        cellElement.querySelector('.run-cell').addEventListener('click', () => {
+            this.runCell(cell);
+        });
+
+        // Delete cell
+        cellElement.querySelector('.delete-cell').addEventListener('click', () => {
+            this.deleteCell(cell);
+        });
+
+        // Move cell up
+        cellElement.querySelector('.move-up').addEventListener('click', () => {
+            this.moveCellUp(cell);
+        });
+
+        // Move cell down
+        cellElement.querySelector('.move-down').addEventListener('click', () => {
+            this.moveCellDown(cell);
+        });
+
+        // Auto-resize textarea
+        const textarea = cellElement.querySelector('.cell-editor');
+        textarea.addEventListener('input', (e) => {
+            cell.code = e.target.value;
+            this.autoResizeTextarea(e.target);
+        });
+
+        // Keyboard shortcuts
+        textarea.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.runCell(cell);
+                } else if (e.key === 'd') {
+                    e.preventDefault();
+                    this.deleteCell(cell);
+                }
+            } else if (e.shiftKey && e.key === 'Enter') {
+                e.preventDefault();
+                this.runCell(cell);
+                this.addCell();
+            }
+        });
+
+        // Initial resize
+        this.autoResizeTextarea(textarea);
+    }
+
+    setupCodeEditor(cellElement, cell) {
+        const textarea = cellElement.querySelector('.cell-editor');
+
+        // Basic syntax highlighting could be added here
+        // For now, we'll use a simple textarea with Python-friendly features
+
+        textarea.addEventListener('keydown', (e) => {
+            // Tab for indentation
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const value = textarea.value;
+
+                if (e.shiftKey) {
+                    // Shift+Tab for dedent
+                    const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+                    const lineText = value.substring(lineStart, start);
+                    if (lineText.startsWith('    ')) {
+                        textarea.value = value.substring(0, lineStart) +
+                                       lineText.substring(4) +
+                                       value.substring(start);
+                        textarea.selectionStart = textarea.selectionEnd = start - 4;
+                    }
+                } else {
+                    // Tab for indent
+                    textarea.value = value.substring(0, start) + '    ' + value.substring(end);
+                    textarea.selectionStart = textarea.selectionEnd = start + 4;
+                }
+
+                cell.code = textarea.value;
+                this.autoResizeTextarea(textarea);
+            }
+        });
+    }
+
+    autoResizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        const newHeight = Math.max(100, Math.min(textarea.scrollHeight, 500));
+        textarea.style.height = newHeight + 'px';
+
+        // Add scrollbar if content exceeds max height
+        if (textarea.scrollHeight > 500) {
+            textarea.style.overflowY = 'auto';
+        } else {
+            textarea.style.overflowY = 'hidden';
+        }
+    }
+
+    async runCell(cell) {
+        if (cell.isRunning) return;
+
+        const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+        const statusElement = cellElement.querySelector('.execution-status');
+        const outputContainer = cellElement.querySelector('.cell-output-container');
+        const outputElement = cellElement.querySelector('.cell-output');
+        const labelElement = cellElement.querySelector('.cell-label');
+        const outputLabelElement = cellElement.querySelector('.cell-output-label');
+
+        try {
+            cell.isRunning = true;
+            cellElement.classList.add('executing');
+            cellElement.classList.remove('success', 'error');
+            statusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+            statusElement.className = 'execution-status running';
+
+            const result = await this.pythonEngine.executeCode(cell.code);
+
+            cell.isRunning = false;
+            cell.executionCount = result.executionId;
+            cell.output = result.output;
+            cell.error = result.error;
+
+            // Update cell labels
+            labelElement.textContent = `In [${cell.executionCount}]:`;
+            outputLabelElement.textContent = `Out [${cell.executionCount}]:`;
+
+            // Update output
+            cellElement.classList.remove('executing');
+            if (result.success) {
+                cellElement.classList.add('success');
+                outputElement.className = 'cell-output';
+                outputElement.innerHTML = this.formatOutput(result.output);
+                statusElement.innerHTML = '<i class="fas fa-check"></i> Completed';
+                statusElement.className = 'execution-status success';
+
+                // Show output container only if there's actual output
+                if (result.output && result.output.trim()) {
+                    outputContainer.style.display = 'block';
+                } else {
+                    outputContainer.style.display = 'none';
+                }
+            } else {
+                cellElement.classList.add('error');
+                outputElement.className = 'cell-output error';
+                outputElement.innerHTML = this.formatOutput(result.error);
+                statusElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                statusElement.className = 'execution-status error';
+                outputContainer.style.display = 'block';
+            }
+
+            // Auto-scroll to show the executed cell output
+            setTimeout(() => {
+                const container = this.container;
+                const cellRect = cellElement.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+
+                // Only scroll if cell is not fully visible
+                if (cellRect.bottom > containerRect.bottom || cellRect.top < containerRect.top) {
+                    cellElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }, 100);
+
+            // Clear status after 4 seconds
+            setTimeout(() => {
+                statusElement.innerHTML = '';
+                statusElement.className = 'execution-status';
+                cellElement.classList.remove('success', 'error');
+            }, 4000);
+
+        } catch (error) {
+            cell.isRunning = false;
+            cell.error = error.message;
+            cellElement.classList.remove('executing');
+            cellElement.classList.add('error');
+            outputElement.className = 'cell-output error';
+            outputElement.innerHTML = this.formatOutput(error.message);
+            statusElement.innerHTML = '<i class="fas fa-times"></i> Error';
+            statusElement.className = 'execution-status error';
+            outputContainer.style.display = 'block';
+        }
+    }
+
+    async runAllCells() {
+        for (const cell of this.cells) {
+            await this.runCell(cell);
+            // Small delay between cells
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+    }
+
+    deleteCell(cell) {
+        if (this.cells.length <= 1) return; // Keep at least one cell
+
+        const cellIndex = this.cells.indexOf(cell);
+        if (cellIndex > -1) {
+            this.cells.splice(cellIndex, 1);
+            const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+            if (cellElement) {
+                cellElement.remove();
+            }
+        }
+    }
+
+    moveCellUp(cell) {
+        const cellIndex = this.cells.indexOf(cell);
+        if (cellIndex > 0) {
+            // Swap with previous cell
+            [this.cells[cellIndex - 1], this.cells[cellIndex]] =
+            [this.cells[cellIndex], this.cells[cellIndex - 1]];
+            this.rerenderNotebook();
+        }
+    }
+
+    moveCellDown(cell) {
+        const cellIndex = this.cells.indexOf(cell);
+        if (cellIndex < this.cells.length - 1) {
+            // Swap with next cell
+            [this.cells[cellIndex], this.cells[cellIndex + 1]] =
+            [this.cells[cellIndex + 1], this.cells[cellIndex]];
+            this.rerenderNotebook();
+        }
+    }
+
+    rerenderNotebook() {
+        this.container.innerHTML = '';
+        this.cells.forEach(cell => this.renderCell(cell));
+    }
+
+    clearAllOutput() {
+        this.cells.forEach(cell => {
+            cell.output = '';
+            cell.error = null;
+            cell.executionCount = null;
+
+            const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+            if (cellElement) {
+                const outputContainer = cellElement.querySelector('.cell-output-container');
+                outputContainer.style.display = 'none';
+
+                const labelElement = cellElement.querySelector('.cell-label');
+                const outputLabelElement = cellElement.querySelector('.cell-output-label');
+                labelElement.textContent = 'In []:';
+                outputLabelElement.textContent = 'Out []:';
+            }
+        });
+    }
+
+    formatOutput(output) {
+        if (!output) return '';
+
+        // Escape HTML and preserve formatting
+        const escaped = output
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+        return `<pre>${escaped}</pre>`;
+    }
+
+    exportNotebook() {
+        const notebookData = {
+            cells: this.cells.map(cell => ({
+                code: cell.code,
+                output: cell.output,
+                error: cell.error
+            })),
+            timestamp: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(notebookData, null, 2)], {
+            type: 'application/json'
+        });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `python-notebook-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    openInColab() {
+        const notebookData = this.pythonEngine.generateColabNotebook(this.cells);
+
+        // Create a blob URL for the notebook
+        const blob = new Blob([notebookData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        // Create a download link for the notebook
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `python-notebook-${Date.now()}.ipynb`;
+
+        // Show instructions to user
+        const instructions = `
+            <h3>Open in Google Colab</h3>
+            <p>To open this notebook in Google Colab:</p>
+            <ol>
+                <li>Click the download button below to save the notebook file</li>
+                <li>Go to <a href="https://colab.research.google.com" target="_blank">Google Colab</a></li>
+                <li>Click "Upload" and select the downloaded .ipynb file</li>
+                <li>Your notebook will open in Colab with all your code!</li>
+            </ol>
+            <div style="margin-top: 1rem;">
+                <button id="download-colab-notebook" style="
+                    background: #f9ab00;
+                    color: #333;
+                    border: none;
+                    padding: 0.75rem 1.5rem;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    font-weight: bold;
+                ">
+                    <i class="fas fa-download"></i> Download Notebook for Colab
+                </button>
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #ccc;">
+                Alternatively, you can also copy your code manually from the cells below and paste it into Colab.
+            </p>
+        `;
+
+        this.showModal('Export to Google Colab', instructions);
+
+        // Add event listener to download button
+        setTimeout(() => {
+            const downloadBtn = document.getElementById('download-colab-notebook');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', () => {
+                    link.click();
+                    this.closeModal();
+                    URL.revokeObjectURL(url);
+                });
+            }
+        }, 100);
+    }
+
+    showModal(title, content) {
+        let modal = document.getElementById('notebook-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'notebook-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001;
+                padding: 2rem;
+                box-sizing: border-box;
+            `;
+
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: #16213e;
+                border: 1px solid #3776ab;
+                border-radius: 8px;
+                padding: 2rem;
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+                color: white;
+                position: relative;
+            `;
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeModal();
+                }
+            });
+        }
+
+        const modalContent = modal.querySelector('div');
+        modalContent.innerHTML = `
+            <button style="
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            " onclick="window.closeNotebookModal()">×</button>
+            <h2 style="margin-top: 0; color: #ffd700;">${title}</h2>
+            ${content}
+        `;
+
+        modal.style.display = 'flex';
+    }
+
+    closeModal() {
+        const modal = document.getElementById('notebook-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    loadNotebook(data) {
+        this.cells = [];
+        this.container.innerHTML = '';
+
+        if (data.cells && data.cells.length > 0) {
+            data.cells.forEach(cellData => {
+                const cell = this.addCell(cellData.code);
+                cell.output = cellData.output || '';
+                cell.error = cellData.error || null;
+            });
+        } else {
+            this.addInitialCell();
+        }
+    }
+
+    getCellsData() {
+        return this.cells.map(cell => ({
+            code: cell.code,
+            output: cell.output,
+            error: cell.error
+        }));
+    }
+}
+
+export { NotebookInterface };
