@@ -36,7 +36,6 @@ class PythonEngine {
             this.isLoaded = true;
             this.hideLoadingOverlay();
 
-            console.log("Python environment initialized successfully");
             return this.pyodide;
 
         } catch (error) {
@@ -60,7 +59,6 @@ class PythonEngine {
         try {
             await this.pyodide.loadPackage(commonPackages);
             commonPackages.forEach(pkg => this.packages.add(pkg));
-            console.log("Common packages installed:", commonPackages);
         } catch (error) {
             console.warn("Some common packages failed to install:", error);
         }

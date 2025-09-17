@@ -27,31 +27,15 @@ class PythonLearnerApp {
         if (this.isInitialized) return;
 
         try {
-            console.log('Starting app initialization...');
-
-            // Verify essential DOM elements exist
-            const requiredElements = ['topic-list', 'concept-content', 'current-concept'];
-            for (const elementId of requiredElements) {
-                const element = document.getElementById(elementId);
-                if (!element) {
-                    throw new Error(`Required element '${elementId}' not found in DOM`);
-                }
-            }
-            console.log('All required DOM elements found');
-
             // Initialize Python engine
-            console.log('Initializing Python engine...');
             await this.pythonEngine.initialize();
-            console.log('Python engine initialized');
 
             // Initialize interfaces
             this.notebookInterface = new NotebookInterface(this.pythonEngine);
             this.terminalInterface = new TerminalInterface(this.pythonEngine);
-            console.log('Interfaces initialized');
 
             // Setup event listeners
             this.setupEventListeners();
-            console.log('Event listeners setup');
 
             // Setup auto-save
             this.storageManager.enableAutoSave(
@@ -59,36 +43,29 @@ class PythonLearnerApp {
                 this.terminalInterface,
                 30000 // 30 seconds
             );
-            console.log('Auto-save enabled');
 
-            // Initialize concepts and populate topic list FIRST
-            console.log('Populating topic list...');
+            // Initialize concepts and populate topic list
             populateTopicList();
 
-            // Load saved data AFTER topic list is populated
+            // Load saved data
             const hasLoadedProgress = this.loadSavedData();
-            console.log('Saved data loaded:', hasLoadedProgress);
             
-            // Always show initial concept to ensure content is visible
-            console.log('Showing initial concept...');
-            try {
-                showConcept(0, 0);
-                console.log('Initial concept displayed successfully');
-            } catch (error) {
-                console.error('Error showing initial concept:', error);
-                // Force fallback content
-                this.showFallbackContent();
+            // Show initial concept
+            if (!hasLoadedProgress) {
+                try {
+                    showConcept(0, 0);
+                } catch (error) {
+                    this.showFallbackContent();
+                }
             }
             
-            // Double-check content is visible after a delay
+            // Verify content is displayed
             setTimeout(() => {
                 const conceptContent = document.getElementById('concept-content');
                 if (!conceptContent || conceptContent.innerHTML.includes('Content Loading Error')) {
-                    console.log('Content still showing error, forcing showConcept again');
                     try {
                         showConcept(0, 0);
                     } catch (error) {
-                        console.error('Failed to show concept on retry:', error);
                         this.showFallbackContent();
                     }
                 }
@@ -98,7 +75,6 @@ class PythonLearnerApp {
             this.initializePackagesSidebar();
 
             this.isInitialized = true;
-            console.log('Python Learner App initialized successfully');
 
         } catch (error) {
             console.error('Failed to initialize app:', error);
@@ -499,27 +475,8 @@ print(f"Hi {name}, you are {age} years old!")</div>
     }
 }
 
-// Global error handler
-window.addEventListener('error', (event) => {
-    console.error('Global error caught:', event.error);
-    console.error('Error details:', {
-        message: event.message,
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno,
-        error: event.error
-    });
-});
-
-window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason);
-    event.preventDefault(); // Prevent the default handler
-});
-
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('DOM loaded, initializing app...');
-    
     try {
         const app = new PythonLearnerApp();
 
@@ -560,8 +517,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.toggleTopicsSidebar = toggleTopicsSidebar;
         window.togglePackagesSidebar = togglePackagesSidebar;
         window.closeSidebars = closeSidebars;
-
-        console.log('Python Learner App ready!');
         
     } catch (error) {
         console.error('Failed to initialize app:', error);
@@ -573,12 +528,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="error-message">
                     <h3>⚠️ Initialization Error</h3>
                     <p>The application failed to initialize properly. Please refresh the page.</p>
-                    <p><strong>Error:</strong> ${error.message}</p>
                     <button onclick="location.reload()" class="btn primary">Refresh Page</button>
-                    <details style="margin-top: 10px;">
-                        <summary>Technical Details</summary>
-                        <pre style="background: #f5f5f5; padding: 10px; margin-top: 10px; overflow-x: auto;">${error.stack}</pre>
-                    </details>
                 </div>
             `;
         }

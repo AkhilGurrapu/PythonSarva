@@ -946,7 +946,7 @@ rate = 0.05  # 5%
 time = 3
 
 compound_interest = principal * (1 + rate) ** time
-print(f"Compound Interest: \\$${'{'}principal{'}'} at ${'{'} rate*100 {'}'}% for ${'{'}time{'}'} years = \\$" + "${'{'} compound_interest:.2f {'}'}")
+print(f"Compound Interest: ${'\\$'}{principal} at {rate*100}% for {time} years = ${'\\$'}{compound_interest:.2f}")
 
 # Calculate circle area and circumference
 import math
@@ -2034,8 +2034,6 @@ function updateProgressDisplay() {
 
 function showConcept(conceptIndex, subConceptIndex = 0) {
     try {
-        console.log('showConcept called with:', { conceptIndex, subConceptIndex });
-        
         // Track time spent on previous concept
         if (userProgress.conceptStartTime) {
             const timeSpent = Date.now() - userProgress.conceptStartTime;
@@ -2055,8 +2053,6 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
 
         const concept = pythonConcepts[conceptIndex];
         if (!concept) {
-            console.error('Concept not found at index:', conceptIndex);
-            // Show fallback content
             const contentArea = document.getElementById('concept-content');
             if (contentArea) {
                 contentArea.innerHTML = `
@@ -2070,8 +2066,6 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
             return;
         }
 
-        console.log('Found concept:', concept.title);
-
         // Update concept title
         const conceptTitle = document.getElementById('current-concept');
         if (conceptTitle) {
@@ -2081,13 +2075,11 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
         // Show concept content
         const contentArea = document.getElementById('concept-content');
         if (!contentArea) {
-            console.error('Content area not found');
             return;
         }
 
         const subConcept = concept.subConcepts[subConceptIndex];
         if (!subConcept) {
-            console.error('Sub-concept not found at index:', subConceptIndex);
             contentArea.innerHTML = `
                 <div class="error-message">
                     <h3>⚠️ Topic Not Found</h3>
@@ -2097,8 +2089,6 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
             `;
             return;
         }
-
-        console.log('Found sub-concept:', subConcept.title);
 
         const isCompleted = userProgress.completedSubConcepts.has(`${conceptIndex}-${subConceptIndex}`);
         const completionBadge = isCompleted ?
@@ -2172,8 +2162,6 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
             </div>
         `;
 
-        console.log('Content populated successfully');
-
         // Setup copy button event listeners
         setupCopyButtonListeners();
 
@@ -2195,17 +2183,8 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
             contentArea.innerHTML = `
                 <div class="error-message">
                     <h3>⚠️ Error Loading Content</h3>
-                    <p>There was an error loading the concept content: ${error.message}</p>
-                    <p>Please refresh the page or try another topic.</p>
+                    <p>There was an error loading the concept content. Please refresh the page or try another topic.</p>
                     <button onclick="location.reload()" class="btn primary">Refresh Page</button>
-                    <details style="margin-top: 10px;">
-                        <summary>Technical Details</summary>
-                        <pre style="background: #f5f5f5; padding: 10px; margin-top: 10px; overflow-x: auto;">
-conceptIndex: ${conceptIndex}
-subConceptIndex: ${subConceptIndex}
-error: ${error.stack}
-                        </pre>
-                    </details>
                 </div>
             `;
         }
@@ -2326,25 +2305,19 @@ function updateSidebarProgress() {
 }
 
 function populateTopicList() {
-    console.log('populateTopicList called');
     const topicList = document.getElementById('topic-list');
     
     if (!topicList) {
-        console.error('topic-list element not found!');
         return;
     }
     
     if (!pythonConcepts || pythonConcepts.length === 0) {
-        console.error('pythonConcepts is empty or undefined:', pythonConcepts);
         return;
     }
     
-    console.log(`Found ${pythonConcepts.length} concepts to populate`);
     topicList.innerHTML = '';
 
     pythonConcepts.forEach((concept, conceptIndex) => {
-        console.log(`Processing concept ${conceptIndex}: ${concept.title}`);
-        
         const isConceptCompleted = userProgress.completedConcepts.has(`${conceptIndex}`);
         const completedSubConcepts = concept.subConcepts.filter((_, subIndex) =>
             userProgress.completedSubConcepts.has(`${conceptIndex}-${subIndex}`)
@@ -2426,13 +2399,9 @@ function populateTopicList() {
         topicList.appendChild(listItem);
     });
 
-    console.log(`Successfully populated ${pythonConcepts.length} topics in sidebar`);
-
     // Load progress and update display
     loadProgress();
     updateProgressDisplay();
-    
-    console.log('populateTopicList completed');
 }
 
 function copyToClipboard(button, code) {
