@@ -2033,34 +2033,73 @@ function updateProgressDisplay() {
 }
 
 function showConcept(conceptIndex, subConceptIndex = 0) {
-    // Track time spent on previous concept
-    if (userProgress.conceptStartTime) {
-        const timeSpent = Date.now() - userProgress.conceptStartTime;
-        userProgress.totalTimeSpent += timeSpent;
-        saveProgress();
-    }
+    try {
+        console.log('showConcept called with:', { conceptIndex, subConceptIndex });
+        
+        // Track time spent on previous concept
+        if (userProgress.conceptStartTime) {
+            const timeSpent = Date.now() - userProgress.conceptStartTime;
+            userProgress.totalTimeSpent += timeSpent;
+            saveProgress();
+        }
 
-    // Start timing for new concept
-    userProgress.conceptStartTime = Date.now();
+        // Start timing for new concept
+        userProgress.conceptStartTime = Date.now();
 
-    currentConceptIndex = conceptIndex;
-    currentSubConceptIndex = subConceptIndex;
+        currentConceptIndex = conceptIndex;
+        currentSubConceptIndex = subConceptIndex;
 
-    // Update global references for notebook refresh
-    window.currentConceptIndex = currentConceptIndex;
-    window.currentSubConceptIndex = currentSubConceptIndex;
+        // Update global references for notebook refresh
+        window.currentConceptIndex = currentConceptIndex;
+        window.currentSubConceptIndex = currentSubConceptIndex;
 
-    const concept = pythonConcepts[conceptIndex];
-    if (!concept) return;
+        const concept = pythonConcepts[conceptIndex];
+        if (!concept) {
+            console.error('Concept not found at index:', conceptIndex);
+            // Show fallback content
+            const contentArea = document.getElementById('concept-content');
+            if (contentArea) {
+                contentArea.innerHTML = `
+                    <div class="error-message">
+                        <h3>⚠️ Content Loading Error</h3>
+                        <p>The requested concept could not be found. Please try refreshing the page or selecting another topic.</p>
+                        <button onclick="location.reload()" class="btn primary">Refresh Page</button>
+                    </div>
+                `;
+            }
+            return;
+        }
 
-    // Update concept title
-    document.getElementById('current-concept').textContent = concept.title;
+        console.log('Found concept:', concept.title);
 
-    // Show concept content
-    const contentArea = document.getElementById('concept-content');
-    const subConcept = concept.subConcepts[subConceptIndex];
+        // Update concept title
+        const conceptTitle = document.getElementById('current-concept');
+        if (conceptTitle) {
+            conceptTitle.textContent = concept.title;
+        }
 
-    if (subConcept) {
+        // Show concept content
+        const contentArea = document.getElementById('concept-content');
+        if (!contentArea) {
+            console.error('Content area not found');
+            return;
+        }
+
+        const subConcept = concept.subConcepts[subConceptIndex];
+        if (!subConcept) {
+            console.error('Sub-concept not found at index:', subConceptIndex);
+            contentArea.innerHTML = `
+                <div class="error-message">
+                    <h3>⚠️ Topic Not Found</h3>
+                    <p>The requested topic could not be found in "${concept.title}".</p>
+                    <button onclick="showConcept(${conceptIndex}, 0)" class="btn primary">Go to First Topic</button>
+                </div>
+            `;
+            return;
+        }
+
+        console.log('Found sub-concept:', subConcept.title);
+
         const isCompleted = userProgress.completedSubConcepts.has(`${conceptIndex}-${subConceptIndex}`);
         const completionBadge = isCompleted ?
             '<span class="completion-badge completed"><i class="fas fa-check-circle"></i> Completed</span>' :
@@ -2132,20 +2171,44 @@ function showConcept(conceptIndex, subConceptIndex = 0) {
                 </div>
             </div>
         `;
-    }
 
-    // Setup copy button event listeners
-    setupCopyButtonListeners();
+        console.log('Content populated successfully');
 
-    // Update sub-concept buttons
-    updateSubConceptButtons(concept);
+        // Setup copy button event listeners
+        setupCopyButtonListeners();
 
-    // Update navigation buttons
-    updateNavigationButtons();
+        // Update sub-concept buttons
+        updateSubConceptButtons(concept);
 
-    // Refresh notebook with current concept examples
-    if (window.notebookInterface && typeof window.notebookInterface.refreshWithCurrentConcept === 'function') {
-        window.notebookInterface.refreshWithCurrentConcept();
+        // Update navigation buttons
+        updateNavigationButtons();
+
+        // Refresh notebook with current concept examples
+        if (window.notebookInterface && typeof window.notebookInterface.refreshWithCurrentConcept === 'function') {
+            window.notebookInterface.refreshWithCurrentConcept();
+        }
+
+    } catch (error) {
+        console.error('Error in showConcept:', error);
+        const contentArea = document.getElementById('concept-content');
+        if (contentArea) {
+            contentArea.innerHTML = `
+                <div class="error-message">
+                    <h3>⚠️ Error Loading Content</h3>
+                    <p>There was an error loading the concept content: ${error.message}</p>
+                    <p>Please refresh the page or try another topic.</p>
+                    <button onclick="location.reload()" class="btn primary">Refresh Page</button>
+                    <details style="margin-top: 10px;">
+                        <summary>Technical Details</summary>
+                        <pre style="background: #f5f5f5; padding: 10px; margin-top: 10px; overflow-x: auto;">
+conceptIndex: ${conceptIndex}
+subConceptIndex: ${subConceptIndex}
+error: ${error.stack}
+                        </pre>
+                    </details>
+                </div>
+            `;
+        }
     }
 }
 
@@ -2263,10 +2326,25 @@ function updateSidebarProgress() {
 }
 
 function populateTopicList() {
+    console.log('populateTopicList called');
     const topicList = document.getElementById('topic-list');
+    
+    if (!topicList) {
+        console.error('topic-list element not found!');
+        return;
+    }
+    
+    if (!pythonConcepts || pythonConcepts.length === 0) {
+        console.error('pythonConcepts is empty or undefined:', pythonConcepts);
+        return;
+    }
+    
+    console.log(`Found ${pythonConcepts.length} concepts to populate`);
     topicList.innerHTML = '';
 
     pythonConcepts.forEach((concept, conceptIndex) => {
+        console.log(`Processing concept ${conceptIndex}: ${concept.title}`);
+        
         const isConceptCompleted = userProgress.completedConcepts.has(`${conceptIndex}`);
         const completedSubConcepts = concept.subConcepts.filter((_, subIndex) =>
             userProgress.completedSubConcepts.has(`${conceptIndex}-${subIndex}`)
@@ -2348,9 +2426,13 @@ function populateTopicList() {
         topicList.appendChild(listItem);
     });
 
+    console.log(`Successfully populated ${pythonConcepts.length} topics in sidebar`);
+
     // Load progress and update display
     loadProgress();
     updateProgressDisplay();
+    
+    console.log('populateTopicList completed');
 }
 
 function copyToClipboard(button, code) {

@@ -212,25 +212,92 @@ await micropip.install("${packageName}")
 
     async reset() {
         if (this.pyodide) {
-            // Reset the Python environment by clearing user variables
-            await this.pyodide.runPython(`
+            try {
+                // Reset the Python environment by clearing user variables
+                await this.pyodide.runPython(`
 # Clear all user-defined variables but preserve system components
 preserved_names = {
     'run_code', '_output_capture', 'OutputCapture', 'io', 'sys',
-    'traceback', 'warnings', 'redirect_stdout', 'redirect_stderr'
+    'traceback', 'warnings', 'redirect_stdout', 'redirect_stderr', 'contextlib'
 }
 
-for name in list(globals().keys()):
-    if not name.startswith('__') and name not in preserved_names:
-        del globals()[name]
+# Get current globals before clearing
+current_globals = dict(globals())
 
-# Reset the output capture if it exists
-if '_output_capture' in globals():
-    _output_capture.stdout = io.StringIO()
-    _output_capture.stderr = io.StringIO()
-    _output_capture.output = ""
-    _output_capture.error = ""
-            `);
+# Clear user variables
+for name in list(current_globals.keys()):
+    if not name.startswith('__') and name not in preserved_names:
+        try:
+            del globals()[name]
+        except:
+            pass
+
+# Ensure all essential components are still available
+try:
+    # Test if our components still work
+    if '_output_capture' in globals() and hasattr(_output_capture, 'capture'):
+        # Reset the output capture
+        _output_capture.stdout = io.StringIO()
+        _output_capture.stderr = io.StringIO() 
+        _output_capture.output = ""
+        _output_capture.error = ""
+    else:
+        # Recreate if something went wrong
+        raise Exception("OutputCapture missing")
+        
+except:
+    # Reinitialize everything if there was an issue
+    import sys
+    import io
+    from contextlib import redirect_stdout, redirect_stderr
+    import traceback
+    import warnings
+    
+    class OutputCapture:
+        def __init__(self):
+            self.stdout = io.StringIO()
+            self.stderr = io.StringIO()
+            self.output = ""
+            self.error = ""
+
+        def capture(self, code):
+            self.stdout = io.StringIO()
+            self.stderr = io.StringIO()
+            self.output = ""
+            self.error = ""
+
+            try:
+                with redirect_stdout(self.stdout), redirect_stderr(self.stderr):
+                    try:
+                        result = eval(code, globals())
+                        if result is not None:
+                            print(repr(result))
+                    except SyntaxError:
+                        exec(code, globals())
+
+                self.output = self.stdout.getvalue()
+                return True, self.output
+
+            except Exception as e:
+                self.error = traceback.format_exc()
+                return False, self.error
+
+    _output_capture = OutputCapture()
+
+    def run_code(code):
+        return _output_capture.capture(code)
+
+print("Python environment reset successfully")
+                `);
+            } catch (error) {
+                console.error('Reset failed:', error);
+                // If reset fails completely, reinitialize the entire Python environment
+                try {
+                    await this.setupPythonEnvironment();
+                } catch (reinitError) {
+                    console.error('Reinit failed:', reinitError);
+                }
+            }
         }
         this.executionCount = 0;
     }

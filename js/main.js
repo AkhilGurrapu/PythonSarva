@@ -27,15 +27,31 @@ class PythonLearnerApp {
         if (this.isInitialized) return;
 
         try {
+            console.log('Starting app initialization...');
+
+            // Verify essential DOM elements exist
+            const requiredElements = ['topic-list', 'concept-content', 'current-concept'];
+            for (const elementId of requiredElements) {
+                const element = document.getElementById(elementId);
+                if (!element) {
+                    throw new Error(`Required element '${elementId}' not found in DOM`);
+                }
+            }
+            console.log('All required DOM elements found');
+
             // Initialize Python engine
+            console.log('Initializing Python engine...');
             await this.pythonEngine.initialize();
+            console.log('Python engine initialized');
 
             // Initialize interfaces
             this.notebookInterface = new NotebookInterface(this.pythonEngine);
             this.terminalInterface = new TerminalInterface(this.pythonEngine);
+            console.log('Interfaces initialized');
 
             // Setup event listeners
             this.setupEventListeners();
+            console.log('Event listeners setup');
 
             // Setup auto-save
             this.storageManager.enableAutoSave(
@@ -43,17 +59,40 @@ class PythonLearnerApp {
                 this.terminalInterface,
                 30000 // 30 seconds
             );
+            console.log('Auto-save enabled');
 
-            // Load saved data
-            const hasLoadedProgress = this.loadSavedData();
-
-            // Initialize concepts
+            // Initialize concepts and populate topic list FIRST
+            console.log('Populating topic list...');
             populateTopicList();
+
+            // Load saved data AFTER topic list is populated
+            const hasLoadedProgress = this.loadSavedData();
+            console.log('Saved data loaded:', hasLoadedProgress);
             
-            // Only show initial concept if no progress was loaded
-            if (!hasLoadedProgress) {
+            // Always show initial concept to ensure content is visible
+            console.log('Showing initial concept...');
+            try {
                 showConcept(0, 0);
+                console.log('Initial concept displayed successfully');
+            } catch (error) {
+                console.error('Error showing initial concept:', error);
+                // Force fallback content
+                this.showFallbackContent();
             }
+            
+            // Double-check content is visible after a delay
+            setTimeout(() => {
+                const conceptContent = document.getElementById('concept-content');
+                if (!conceptContent || conceptContent.innerHTML.includes('Content Loading Error')) {
+                    console.log('Content still showing error, forcing showConcept again');
+                    try {
+                        showConcept(0, 0);
+                    } catch (error) {
+                        console.error('Failed to show concept on retry:', error);
+                        this.showFallbackContent();
+                    }
+                }
+            }, 500);
 
             // Initialize packages sidebar
             this.initializePackagesSidebar();
@@ -361,6 +400,96 @@ class PythonLearnerApp {
         this.showMessage(message, 'error');
     }
 
+    showFallbackContent() {
+        console.log('Showing fallback content...');
+        const contentArea = document.getElementById('concept-content');
+        const conceptTitle = document.getElementById('current-concept');
+        
+        if (conceptTitle) {
+            conceptTitle.textContent = 'Python Basics';
+        }
+        
+        if (contentArea) {
+            contentArea.innerHTML = `
+                <div class="concept-header-info">
+                    <div class="concept-meta">
+                        <div class="level-info">
+                            <span class="level-badge basic">Basic</span>
+                            <span class="time-estimate">
+                                <i class="fas fa-clock"></i> 1-2 hours
+                            </span>
+                            <span class="completion-badge">
+                                <i class="far fa-circle"></i> Getting Started
+                            </span>
+                        </div>
+                        <div class="concept-description">
+                            <p>Welcome to Python! Let's start with the fundamentals of programming in Python.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subconcept-content">
+                    <div class="subconcept-header">
+                        <h2>Welcome to Python Learning! 🐍</h2>
+                    </div>
+
+                    <div class="explanation-section">
+                        <h3>Getting Started with Python</h3>
+                        <p>Python is a powerful, easy-to-learn programming language. Let's start your journey!</p>
+                        
+                        <h4>🚀 What you'll learn:</h4>
+                        <ul>
+                            <li><strong>Python Syntax:</strong> Variables, data types, and basic operations</li>
+                            <li><strong>Control Flow:</strong> Conditions, loops, and logic</li>
+                            <li><strong>Data Structures:</strong> Lists, dictionaries, and more</li>
+                            <li><strong>Functions:</strong> Writing reusable code</li>
+                            <li><strong>Object-Oriented Programming:</strong> Classes and objects</li>
+                        </ul>
+
+                        <h4>💡 Try your first Python code:</h4>
+                        <p>Click the "Topics" button in the top-left to see all available lessons, or try running some Python code in the terminal/notebook!</p>
+                    </div>
+
+                    <div class="code-example">
+                        <div class="code-header">
+                            <div class="code-language">
+                                Your First Python Program
+                            </div>
+                            <button class="copy-btn" data-code='print("Hello, Python!")\\nprint("Welcome to programming!")\\n\\n# Variables\\nname = "Python Learner"\\nage = 25\\nprint(f"Hi {name}, you are {age} years old!")'>
+                                <i class="fas fa-copy"></i> Copy Code
+                            </button>
+                        </div>
+                        <div class="code-content">print("Hello, Python!")
+print("Welcome to programming!")
+
+# Variables
+name = "Python Learner"
+age = 25
+print(f"Hi {name}, you are {age} years old!")</div>
+                    </div>
+
+                    <div class="concept-nav">
+                        <button class="nav-btn" onclick="toggleTopicsSidebar()">
+                            <i class="fas fa-list"></i> View All Topics
+                        </button>
+                        <button class="nav-btn" onclick="location.reload()">
+                            <i class="fas fa-refresh"></i> Refresh Page
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Setup copy button event listener
+            const copyBtn = contentArea.querySelector('.copy-btn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const code = copyBtn.getAttribute('data-code').replace(/\\n/g, '\n');
+                    copyToClipboard(copyBtn, code);
+                });
+            }
+        }
+    }
+
     // Method to handle URL hash changes
     handleHashChange() {
         const hash = window.location.hash.substr(1);
@@ -370,44 +499,90 @@ class PythonLearnerApp {
     }
 }
 
+// Global error handler
+window.addEventListener('error', (event) => {
+    console.error('Global error caught:', event.error);
+    console.error('Error details:', {
+        message: event.message,
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+        error: event.error
+    });
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('Unhandled promise rejection:', event.reason);
+    event.preventDefault(); // Prevent the default handler
+});
+
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
-    const app = new PythonLearnerApp();
+    console.log('DOM loaded, initializing app...');
+    
+    try {
+        const app = new PythonLearnerApp();
 
-    // Handle initial hash
-    const initialHash = window.location.hash.substr(1);
-    if (initialHash === 'terminal') {
-        app.currentMode = 'terminal';
-    }
-
-    // Initialize the app
-    await app.initialize();
-
-    // Handle hash changes
-    window.addEventListener('hashchange', () => app.handleHashChange());
-
-    // Handle initial hash
-    app.handleHashChange();
-
-    // Make app available globally for debugging
-    window.pythonLearnerApp = app;
-
-    // Make notebook interface globally available for concept refresh
-    window.notebookInterface = app.notebookInterface;
-
-    // Make notebook modal close function globally available
-    window.closeNotebookModal = () => {
-        if (app.notebookInterface) {
-            app.notebookInterface.closeModal();
+        // Handle initial hash
+        const initialHash = window.location.hash.substr(1);
+        if (initialHash === 'terminal') {
+            app.currentMode = 'terminal';
         }
-    };
 
-    // Make concept functions globally available for onclick handlers
-    window.markConceptCompleted = markConceptCompleted;
-    window.copyToClipboard = copyToClipboard;
-    window.navigateConcept = navigateConcept;
+        // Initialize the app
+        await app.initialize();
 
-    console.log('Python Learner App ready!');
+        // Handle hash changes
+        window.addEventListener('hashchange', () => app.handleHashChange());
+
+        // Handle initial hash
+        app.handleHashChange();
+
+        // Make app available globally for debugging
+        window.pythonLearnerApp = app;
+
+        // Make notebook interface globally available for concept refresh
+        window.notebookInterface = app.notebookInterface;
+
+        // Make notebook modal close function globally available
+        window.closeNotebookModal = () => {
+            if (app.notebookInterface) {
+                app.notebookInterface.closeModal();
+            }
+        };
+
+        // Make concept functions globally available for onclick handlers
+        window.markConceptCompleted = markConceptCompleted;
+        window.copyToClipboard = copyToClipboard;
+        window.navigateConcept = navigateConcept;
+        
+        // Make sidebar functions globally available
+        window.toggleTopicsSidebar = toggleTopicsSidebar;
+        window.togglePackagesSidebar = togglePackagesSidebar;
+        window.closeSidebars = closeSidebars;
+
+        console.log('Python Learner App ready!');
+        
+    } catch (error) {
+        console.error('Failed to initialize app:', error);
+        
+        // Show fallback error message
+        const contentArea = document.getElementById('concept-content');
+        if (contentArea) {
+            contentArea.innerHTML = `
+                <div class="error-message">
+                    <h3>⚠️ Initialization Error</h3>
+                    <p>The application failed to initialize properly. Please refresh the page.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <button onclick="location.reload()" class="btn primary">Refresh Page</button>
+                    <details style="margin-top: 10px;">
+                        <summary>Technical Details</summary>
+                        <pre style="background: #f5f5f5; padding: 10px; margin-top: 10px; overflow-x: auto;">${error.stack}</pre>
+                    </details>
+                </div>
+            `;
+        }
+    }
 });
 
 export { PythonLearnerApp };
