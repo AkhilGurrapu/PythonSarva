@@ -30,26 +30,30 @@ const pythonConcepts = [
                         <li>🎮 <strong>Game Development:</strong> Pygame, Panda3D</li>
                     </ul>
                 `,
-                exampleCode: `# Step 1: Your First Python Program
+                exampleCode: `# Your first Python program!
 print("Hello, Python World! 🐍")
 print("Welcome to your programming journey!")
 
+# Let's explore what makes Python special
+print("\\n=== Python Features Demo ===")
 
-# Step 2: Using Variables  
+# Clean, readable syntax
 message = "Python is awesome!"
 print(f"Message: {message}")
 
-
-# Step 3: Different Data Types
+# Dynamic typing - no need to declare variable types
 name = "Alice"
 age = 25
 height = 5.6
 is_programmer = True
 
-print(f"Name: {name}")
+print(f"\\nName: {name}")
 print(f"Age: {age}")
 print(f"Height: {height}ft")
-print(f"Is programmer: {is_programmer}")`
+print(f"Is programmer: {is_programmer}")
+
+# Python's philosophy
+import this  # Try this in the terminal!`
             },
             {
                 title: "Python Syntax & REPL",

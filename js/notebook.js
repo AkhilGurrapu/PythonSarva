@@ -55,19 +55,34 @@ class NotebookInterface {
             if (window.pythonConcepts && typeof window.currentConceptIndex !== 'undefined' && typeof window.currentSubConceptIndex !== 'undefined') {
                 const currentConcept = window.pythonConcepts[window.currentConceptIndex];
                 console.log('📖 Current concept:', currentConcept?.title);
-                
+
                 if (currentConcept && currentConcept.subConcepts && currentConcept.subConcepts[window.currentSubConceptIndex]) {
                     const currentSubConcept = currentConcept.subConcepts[window.currentSubConceptIndex];
 
                     console.log('📝 Loading examples for:', currentSubConcept.title);
-                    console.log('📋 Has exampleCode:', !!currentSubConcept.exampleCode);
-                    console.log('📋 ExampleCode length:', currentSubConcept.exampleCode?.length);
 
-                    if (currentSubConcept.exampleCode) {
+                    // NEW: Support for codeCells array (with markdown and code cells)
+                    if (currentSubConcept.codeCells && Array.isArray(currentSubConcept.codeCells)) {
+                        console.log('📋 Loading codeCells array:', currentSubConcept.codeCells.length, 'cells');
+                        currentSubConcept.codeCells.forEach((cell, index) => {
+                            if (cell.type === 'markdown') {
+                                // Add markdown as a comment cell
+                                const markdownCode = `# ${cell.content.replace(/\n/g, '\n# ')}`;
+                                console.log(`➕ Adding markdown cell ${index + 1}`);
+                                this.addCell(markdownCode);
+                            } else if (cell.type === 'code') {
+                                console.log(`➕ Adding code cell ${index + 1}`);
+                                this.addCell(cell.content.trim());
+                            }
+                        });
+                    }
+                    // LEGACY: Support for old exampleCode format
+                    else if (currentSubConcept.exampleCode) {
+                        console.log('📋 Has exampleCode:', !!currentSubConcept.exampleCode);
                         // Try to split the example code by triple newlines first
                         const codeBlocks = currentSubConcept.exampleCode.split('\n\n\n').filter(block => block.trim());
                         console.log('🔀 Code blocks found:', codeBlocks.length);
-                        
+
                         if (codeBlocks.length > 1) {
                             // Multiple blocks found - add each as separate cells
                             console.log('➕ Adding multiple blocks as separate cells');
