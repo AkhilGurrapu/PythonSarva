@@ -8,6 +8,7 @@ class NotebookInterface {
         this.cellCounter = 0;
         this.container = document.getElementById('notebook-container');
         this.hasAddedDefaultCell = false; // Track if default cell was already added
+        this.isLoadingConcept = false; // Track if we're loading a concept (to prevent auto-scroll)
         this.setupEventListeners();
         console.log('📱 Event listeners set up');
         // Don't add initial cell here - let the loading process handle it
@@ -135,10 +136,30 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
     refreshWithCurrentConcept() {
         console.log('🔄 refreshWithCurrentConcept called');
         console.log('📝 Current cells before clear:', this.cells.length);
+
+        // Set loading flag to prevent auto-scroll during cell creation
+        this.isLoadingConcept = true;
+
         this.clearAllCells(); // Clear existing cells first
         console.log('🗑️ Cells after clear:', this.cells.length);
         this.loadConceptExamples();
         console.log('➕ Cells after loading examples:', this.cells.length);
+
+        // Reset loading flag and scroll to top
+        this.isLoadingConcept = false;
+        setTimeout(() => {
+            this.scrollToTop();
+        }, 150);
+    }
+
+    scrollToTop() {
+        if (this.container) {
+            this.container.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            console.log('📜 Scrolled notebook to top');
+        }
     }
 
 
@@ -155,17 +176,19 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
 
         this.cells.push(cell);
         const cellElement = this.renderCell(cell);
-        
-        // Auto-scroll to the newly created cell
-        setTimeout(() => {
-            this.scrollToNewCell(cellElement);
-            // Focus on the new cell's textarea
-            const textarea = cellElement.querySelector('.cell-editor');
-            if (textarea) {
-                textarea.focus();
-            }
-        }, 100);
-        
+
+        // Only auto-scroll if NOT loading a concept (i.e., user manually added cell)
+        if (!this.isLoadingConcept) {
+            setTimeout(() => {
+                this.scrollToNewCell(cellElement);
+                // Focus on the new cell's textarea
+                const textarea = cellElement.querySelector('.cell-editor');
+                if (textarea) {
+                    textarea.focus();
+                }
+            }, 100);
+        }
+
         return cell;
     }
 
