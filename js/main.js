@@ -34,6 +34,10 @@ class PythonLearnerApp {
             this.notebookInterface = new NotebookInterface(this.pythonEngine);
             this.terminalInterface = new TerminalInterface(this.pythonEngine);
 
+            // Expose to window for concept navigation
+            window.notebookInterface = this.notebookInterface;
+            window.terminalInterface = this.terminalInterface;
+
             // Setup event listeners
             this.setupEventListeners();
 

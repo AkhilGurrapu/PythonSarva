@@ -8,6 +8,7 @@ class NotebookInterface {
         this.cellCounter = 0;
         this.container = document.getElementById('notebook-container');
         this.hasAddedDefaultCell = false; // Track if default cell was already added
+        this.isLoadingConcept = false; // Track if we're loading a concept (to prevent auto-scroll)
         this.setupEventListeners();
         console.log('📱 Event listeners set up');
         // Don't add initial cell here - let the loading process handle it
@@ -55,19 +56,33 @@ class NotebookInterface {
             if (window.pythonConcepts && typeof window.currentConceptIndex !== 'undefined' && typeof window.currentSubConceptIndex !== 'undefined') {
                 const currentConcept = window.pythonConcepts[window.currentConceptIndex];
                 console.log('📖 Current concept:', currentConcept?.title);
-                
+
                 if (currentConcept && currentConcept.subConcepts && currentConcept.subConcepts[window.currentSubConceptIndex]) {
                     const currentSubConcept = currentConcept.subConcepts[window.currentSubConceptIndex];
 
                     console.log('📝 Loading examples for:', currentSubConcept.title);
-                    console.log('📋 Has exampleCode:', !!currentSubConcept.exampleCode);
-                    console.log('📋 ExampleCode length:', currentSubConcept.exampleCode?.length);
 
-                    if (currentSubConcept.exampleCode) {
+                    // NEW: Support for codeCells array (with markdown and code cells)
+                    if (currentSubConcept.codeCells && Array.isArray(currentSubConcept.codeCells)) {
+                        console.log('📋 Loading codeCells array:', currentSubConcept.codeCells.length, 'cells');
+                        currentSubConcept.codeCells.forEach((cell, index) => {
+                            if (cell.type === 'markdown') {
+                                // Add as proper markdown cell
+                                console.log(`➕ Adding markdown cell ${index + 1}`);
+                                this.addCell(cell.content.trim(), 'markdown');
+                            } else if (cell.type === 'code') {
+                                console.log(`➕ Adding code cell ${index + 1}`);
+                                this.addCell(cell.content.trim(), 'code');
+                            }
+                        });
+                    }
+                    // LEGACY: Support for old exampleCode format
+                    else if (currentSubConcept.exampleCode) {
+                        console.log('📋 Has exampleCode:', !!currentSubConcept.exampleCode);
                         // Try to split the example code by triple newlines first
                         const codeBlocks = currentSubConcept.exampleCode.split('\n\n\n').filter(block => block.trim());
                         console.log('🔀 Code blocks found:', codeBlocks.length);
-                        
+
                         if (codeBlocks.length > 1) {
                             // Multiple blocks found - add each as separate cells
                             console.log('➕ Adding multiple blocks as separate cells');
@@ -120,17 +135,38 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
     refreshWithCurrentConcept() {
         console.log('🔄 refreshWithCurrentConcept called');
         console.log('📝 Current cells before clear:', this.cells.length);
+
+        // Set loading flag to prevent auto-scroll during cell creation
+        this.isLoadingConcept = true;
+
         this.clearAllCells(); // Clear existing cells first
         console.log('🗑️ Cells after clear:', this.cells.length);
         this.loadConceptExamples();
         console.log('➕ Cells after loading examples:', this.cells.length);
+
+        // Reset loading flag and scroll to top
+        this.isLoadingConcept = false;
+        setTimeout(() => {
+            this.scrollToTop();
+        }, 150);
+    }
+
+    scrollToTop() {
+        if (this.container) {
+            this.container.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            console.log('📜 Scrolled notebook to top');
+        }
     }
 
 
-    addCell(initialCode = '') {
+    addCell(initialCode = '', cellType = 'code') {
         const cellId = `cell-${++this.cellCounter}`;
         const cell = {
             id: cellId,
+            type: cellType, // 'code' or 'markdown'
             code: initialCode,
             output: '',
             error: null,
@@ -140,65 +176,112 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
 
         this.cells.push(cell);
         const cellElement = this.renderCell(cell);
-        
-        // Auto-scroll to the newly created cell
-        setTimeout(() => {
-            this.scrollToNewCell(cellElement);
-            // Focus on the new cell's textarea
-            const textarea = cellElement.querySelector('.cell-editor');
-            if (textarea) {
-                textarea.focus();
-            }
-        }, 100);
-        
+
+        // Only auto-scroll if NOT loading a concept (i.e., user manually added cell)
+        if (!this.isLoadingConcept) {
+            setTimeout(() => {
+                this.scrollToNewCell(cellElement);
+                // Focus on the new cell's textarea
+                const textarea = cellElement.querySelector('.cell-editor');
+                if (textarea) {
+                    textarea.focus();
+                }
+            }, 100);
+        }
+
         return cell;
+    }
+
+    renderMarkdown(markdown) {
+        // Simple markdown renderer for common patterns
+        let html = markdown
+            // Headers
+            .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+            .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+            .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+            // Bold
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            // Italic
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            // Code inline
+            .replace(/`(.*?)`/g, '<code>$1</code>')
+            // Code blocks
+            .replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>')
+            // Line breaks
+            .replace(/\n/g, '<br>');
+
+        return html;
     }
 
     renderCell(cell) {
         const cellElement = document.createElement('div');
-        cellElement.className = 'notebook-cell';
+        cellElement.className = `notebook-cell ${cell.type === 'markdown' ? 'markdown-cell' : 'code-cell'}`;
         cellElement.dataset.cellId = cell.id;
 
-        cellElement.innerHTML = `
-            <div class="cell-controls">
-                <button class="cell-btn run-cell" title="Run Cell (Ctrl+Enter)">
-                    <i class="fas fa-play"></i> Run
-                </button>
-                <button class="cell-btn delete-cell" title="Delete Cell (Ctrl+D)">
-                    <i class="fas fa-trash"></i>
-                </button>
-                <button class="cell-btn move-up" title="Move Up">
-                    <i class="fas fa-arrow-up"></i>
-                </button>
-                <button class="cell-btn move-down" title="Move Down">
-                    <i class="fas fa-arrow-down"></i>
-                </button>
-            </div>
-            <div class="cell-header">
-                <span class="cell-label">In [${cell.executionCount || ' '}]:</span>
-                <div class="execution-status"></div>
-            </div>
-            <div class="cell-input">
-                <textarea class="cell-editor" id="editor-${cell.id}" name="code-${cell.id}" placeholder="# Write your Python code here...">${cell.code}</textarea>
-            </div>
-            <div class="cell-output-container" style="display: ${cell.output || cell.error ? 'block' : 'none'}">
-                <div class="cell-output-label">Out [${cell.executionCount || ' '}]:</div>
-                <div class="cell-output ${cell.error ? 'error' : ''}">${this.formatOutput(cell.output || cell.error || '')}</div>
-            </div>
-        `;
+        if (cell.type === 'markdown') {
+            // Render markdown cell
+            cellElement.innerHTML = `
+                <div class="cell-controls">
+                    <button class="cell-btn delete-cell" title="Delete Cell (Ctrl+D)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="cell-btn move-up" title="Move Up">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="cell-btn move-down" title="Move Down">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="markdown-content">${this.renderMarkdown(cell.code)}</div>
+            `;
+        } else {
+            // Render code cell
+            cellElement.innerHTML = `
+                <div class="cell-controls">
+                    <button class="cell-btn run-cell" title="Run Cell (Ctrl+Enter)">
+                        <i class="fas fa-play"></i> Run
+                    </button>
+                    <button class="cell-btn delete-cell" title="Delete Cell (Ctrl+D)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="cell-btn move-up" title="Move Up">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="cell-btn move-down" title="Move Down">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="cell-header">
+                    <span class="cell-label">In [${cell.executionCount || ' '}]:</span>
+                    <div class="execution-status"></div>
+                </div>
+                <div class="cell-input">
+                    <textarea class="cell-editor" id="editor-${cell.id}" name="code-${cell.id}" placeholder="# Write your Python code here...">${cell.code}</textarea>
+                </div>
+                <div class="cell-output-container" style="display: ${cell.output || cell.error ? 'block' : 'none'}">
+                    <div class="cell-output-label">Out [${cell.executionCount || ' '}]:</div>
+                    <div class="cell-output ${cell.error ? 'error' : ''}">${this.formatOutput(cell.output || cell.error || '')}</div>
+                </div>
+            `;
+        }
 
         this.container.appendChild(cellElement);
         this.setupCellEventListeners(cellElement, cell);
-        this.setupCodeEditor(cellElement, cell);
+        if (cell.type === 'code') {
+            this.setupCodeEditor(cellElement, cell);
+        }
 
         return cellElement;
     }
 
     setupCellEventListeners(cellElement, cell) {
-        // Run cell
-        cellElement.querySelector('.run-cell').addEventListener('click', () => {
-            this.runCell(cell);
-        });
+        // Run cell (only for code cells)
+        const runBtn = cellElement.querySelector('.run-cell');
+        if (runBtn) {
+            runBtn.addEventListener('click', () => {
+                this.runCell(cell);
+            });
+        }
 
         // Delete cell
         cellElement.querySelector('.delete-cell').addEventListener('click', () => {

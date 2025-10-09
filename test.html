@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+    <h1>Testing Concepts Loading</h1>
+    <div id="output"></div>
+    <script type="module">
+        import { showConcept, populateTopicList } from './js/concepts.js';
+        
+        const output = document.getElementById('output');
+        output.innerHTML = '<p>Loading concepts...</p>';
+        
+        try {
+            // Check if concepts loaded
+            if (window.pythonConcepts) {
+                output.innerHTML = `<p>✅ Loaded ${window.pythonConcepts.length} concepts!</p>`;
+                output.innerHTML += `<p>First concept: ${window.pythonConcepts[0].title}</p>`;
+                
+                // Test first sub-concept
+                const firstSub = window.pythonConcepts[0].subConcepts[0];
+                output.innerHTML += `<p>First sub-concept: ${firstSub.title}</p>`;
+                
+                if (firstSub.codeCells) {
+                    output.innerHTML += `<p>✅ Has ${firstSub.codeCells.length} code cells!</p>`;
+                } else if (firstSub.exampleCode) {
+                    output.innerHTML += `<p>Has exampleCode (will be split into cells)</p>`;
+                }
+            } else {
+                output.innerHTML = '<p>❌ Concepts not loaded</p>';
+            }
+        } catch(e) {
+            output.innerHTML = `<p>❌ Error: ${e.message}</p>`;
+        }
+    </script>
+</body>
+</html>

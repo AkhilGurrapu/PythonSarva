@@ -30,32 +30,30 @@ const pythonConcepts = [
                         <li>🎮 <strong>Game Development:</strong> Pygame, Panda3D</li>
                     </ul>
                 `,
-                codeCells: [
-                    {
-                        type: 'markdown',
-                        content: '# Step 1: Your First Python Program\nLet\'s start with the classic "Hello World" program!'
-                    },
-                    {
-                        type: 'code',
-                        content: 'print("Hello, Python World! 🐍")\nprint("Welcome to your programming journey!")'
-                    },
-                    {
-                        type: 'markdown',
-                        content: '## Step 2: Using Variables\nVariables store data that we can use later in our program.'
-                    },
-                    {
-                        type: 'code',
-                        content: 'message = "Python is awesome!"\nprint(f"Message: {message}")'
-                    },
-                    {
-                        type: 'markdown',
-                        content: '### Step 3: Different Data Types\nPython supports various data types: **strings**, **integers**, **floats**, and **booleans**.'
-                    },
-                    {
-                        type: 'code',
-                        content: 'name = "Alice"\nage = 25\nheight = 5.6\nis_programmer = True\n\nprint(f"Name: {name}")\nprint(f"Age: {age}")\nprint(f"Height: {height}ft")\nprint(f"Is programmer: {is_programmer}")'
-                    }
-                ]
+                exampleCode: `# Your first Python program!
+print("Hello, Python World! 🐍")
+print("Welcome to your programming journey!")
+
+# Let's explore what makes Python special
+print("\\n=== Python Features Demo ===")
+
+# Clean, readable syntax
+message = "Python is awesome!"
+print(f"Message: {message}")
+
+# Dynamic typing - no need to declare variable types
+name = "Alice"
+age = 25
+height = 5.6
+is_programmer = True
+
+print(f"\\nName: {name}")
+print(f"Age: {age}")
+print(f"Height: {height}ft")
+print(f"Is programmer: {is_programmer}")
+
+# Python's philosophy
+import this  # Try this in the terminal!`
             },
             {
                 title: "Python Syntax & REPL",
@@ -81,14 +79,10 @@ const pythonConcepts = [
                 `,
                 exampleCode: `# 1. BASIC SYNTAX EXAMPLES
 
-
-
 # Variables (no declaration needed!)
 student_name = "John Doe"
 student_age = 20
 student_gpa = 3.8
-
-
 
 # Python is case-sensitive
 Name = "Different variable"
@@ -97,8 +91,6 @@ name = "Another different variable"
 print(f"student_name: {student_name}")
 print(f"Name: {Name}")
 print(f"name: {name}")
-
-
 
 # 2. INDENTATION EXAMPLE
 print("\\n=== Indentation Demo ===")
@@ -110,30 +102,20 @@ if student_gpa > 3.5:
 else:
     print("Study harder!")
 
-
-
 # 3. MULTIPLE ASSIGNMENT
 x, y, z = 10, 20, 30
 print(f"\\nMultiple assignment: x={x}, y={y}, z={z}")
 
-
-
 # Chain assignment
 a = b = c = 100
 print(f"Chain assignment: a={a}, b={b}, c={c}")
-
-
 
 # 4. LINE CONTINUATION
 total = 1 + 2 + 3 + \\
         4 + 5 + 6
 print(f"\\nLine continuation result: {total}")
 
-
-
 # 5. COMMENTS
-
-
 # Single line comment
 
 """
@@ -170,22 +152,12 @@ print("\\n🎉 Syntax basics completed!")`
                     <p>Follow PEP 257 for docstring standards</p>
                 `,
                 exampleCode: `# 1. SINGLE-LINE COMMENTS
-
-
 # This is a single-line comment
 print("Hello World")  # Inline comment
 
-
-
 # TODO: Add error handling here
-
-
 # FIXME: This logic needs revision
-
-
 # NOTE: This is important information
-
-
 
 # 2. MULTI-LINE COMMENTS
 """
@@ -194,8 +166,6 @@ It can span multiple lines and is often used
 for detailed explanations or temporarily
 disabling code blocks.
 """
-
-
 
 # 3. DOCSTRINGS (Function Documentation)
 def calculate_area(length, width):
@@ -215,8 +185,6 @@ def calculate_area(length, width):
     """
     return length * width
 
-
-
 # 4. CLASS DOCSTRINGS
 class Student:
     """
@@ -234,8 +202,6 @@ class Student:
         self.age = age
         self.grades = []
 
-
-
 # 5. MODULE DOCSTRING (at the top of file)
 """
 This module contains examples of Python commenting best practices.
@@ -247,13 +213,9 @@ It demonstrates various types of comments including:
 - Inline documentation
 """
 
-
-
 # Testing our function
 area = calculate_area(10, 5)
 print(f"Area of rectangle: {area}")
-
-
 
 # Access docstring
 print(f"\\nFunction docstring:")
@@ -296,23 +258,11 @@ is_valid = True              # boolean flag
 
 print(f"User: {user_name}, Age: {age}")
 
-
-
 # 2. INVALID VARIABLE NAMES (commented out - would cause errors)
-
-
 # 2nd_name = "Bob"       # Can't start with number
-
-
 # user-name = "Charlie"  # Can't use hyphens
-
-
 # class = "Python"       # Can't use keywords
-
-
 # @symbol = "value"      # Can't use special symbols
-
-
 
 # 3. CASE SENSITIVITY DEMO
 name = "lowercase"
@@ -324,16 +274,10 @@ print(f"name: {name}")
 print(f"Name: {Name}")
 print(f"NAME: {NAME}")
 
-
-
 # 4. MULTIPLE VARIABLE ASSIGNMENT
-
-
 # Tuple unpacking
 first_name, last_name = "John", "Doe"
 x, y, z = 1, 2, 3
-
-
 
 # Same value to multiple variables
 a = b = c = 10
@@ -343,16 +287,12 @@ print(f"Name: {first_name} {last_name}")
 print(f"Coordinates: x={x}, y={y}, z={z}")
 print(f"Same values: a={a}, b={b}, c={c}")
 
-
-
 # 5. VARIABLE SWAPPING (Python magic!)
 a, b = 100, 200
 print(f"\\nBefore swap: a={a}, b={b}")
 
 a, b = b, a  # Swap without temporary variable!
 print(f"After swap: a={a}, b={b}")
-
-
 
 # 6. DYNAMIC TYPING DEMO
 dynamic_var = "I'm a string"
@@ -364,28 +304,16 @@ print(f"Same variable as int: {dynamic_var} (type: {type(dynamic_var).__name__})
 dynamic_var = [1, 2, 3]
 print(f"Same variable as list: {dynamic_var} (type: {type(dynamic_var).__name__})")
 
-
-
 # 7. NAMING BEST PRACTICES
-
-
 # Good names (descriptive)
 student_count = 30
 total_price = 99.99
 is_authenticated = False
 user_email_address = "user@example.com"
 
-
-
 # Avoid (not descriptive)
-
-
 # n = 30          # What does 'n' represent?
-
-
 # tp = 99.99      # What is 'tp'?
-
-
 # flag = False    # What kind of flag?
 
 print(f"\\n✅ Good variable naming practices completed!")`
@@ -422,8 +350,6 @@ print(f"\\n✅ Good variable naming practices completed!")`
                     <p><code>abs(), round(), pow(), min(), max(), sum(), divmod()</code></p>
                 `,
                 exampleCode: `# 1. INTEGER EXAMPLES
-
-
 # Basic integers
 positive_int = 42
 negative_int = -17
@@ -434,8 +360,6 @@ print(f"Positive: {positive_int}")
 print(f"Negative: {negative_int}")
 print(f"Big number: {big_number}")
 
-
-
 # Different number systems
 binary = 0b1010      # Binary (10 in decimal)
 octal = 0o755        # Octal (493 in decimal)
@@ -445,8 +369,6 @@ print(f"\\nNumber systems:")
 print(f"Binary 0b1010 = {binary}")
 print(f"Octal 0o755 = {octal}")
 print(f"Hex 0xFF = {hexadecimal}")
-
-
 
 # 2. FLOAT EXAMPLES
 pi = 3.14159265359
@@ -460,8 +382,6 @@ print(f"Scientific: {scientific}")
 print(f"Infinity: {infinity}")
 print(f"NaN: {not_a_number}")
 
-
-
 # 3. COMPLEX NUMBERS
 complex1 = 3 + 4j
 complex2 = complex(1, 2)  # Alternative creation
@@ -474,8 +394,6 @@ print(f"Complex2: {complex2}")
 print(f"Real part: {real_part}")
 print(f"Imaginary part: {imag_part}")
 
-
-
 # 4. MATHEMATICAL OPERATIONS
 a, b = 15, 4
 print(f"\\nMath operations with {a} and {b}:")
@@ -487,8 +405,6 @@ print(f"Floor division: {a} // {b} = {a // b}")
 print(f"Modulus: {a} % {b} = {a % b}")
 print(f"Exponentiation: {a} ** {b} = {a ** b}")
 
-
-
 # 5. BUILT-IN FUNCTIONS
 numbers = [3.7, -2.1, 5.9, -1.2, 8.5]
 print(f"\\nNumbers: {numbers}")
@@ -497,8 +413,6 @@ print(f"Rounded: {[round(x) for x in numbers]}")
 print(f"Sum: {sum(numbers)}")
 print(f"Min: {min(numbers)}")
 print(f"Max: {max(numbers)}")
-
-
 
 # Divmod - division and remainder in one go
 quotient, remainder = divmod(17, 5)
@@ -548,8 +462,6 @@ print(f"Triple: {triple_quote}")
 print(f"Raw: {raw_string}")
 print(f"Unicode: {unicode_string}")
 
-
-
 # 2. CASE CONVERSION METHODS
 text = "python programming"
 print(f"\\nCase Conversion:")
@@ -560,8 +472,6 @@ print(f"Title: '{text.title()}'")
 print(f"Capitalize: '{text.capitalize()}'")
 print(f"Swapcase: '{text.swapcase()}'")
 
-
-
 # 3. WHITESPACE AND CLEANING
 messy_text = "   Python Programming   \\n\\t"
 print(f"\\nWhitespace Handling:")
@@ -569,8 +479,6 @@ print(f"Original: '{messy_text}'")
 print(f"Strip: '{messy_text.strip()}'")
 print(f"Left strip: '{messy_text.lstrip()}'")
 print(f"Right strip: '{messy_text.rstrip()}'")
-
-
 
 # 4. STRING SEARCHING AND CHECKING
 sentence = "Python is amazing for data science and web development"
@@ -584,8 +492,6 @@ print(f"Is alphabetic: {'Python'.isalpha()}")
 print(f"Is digit: {'123'.isdigit()}")
 print(f"Is alphanumeric: {'Python3'.isalnum()}")
 
-
-
 # 5. STRING SPLITTING AND JOINING
 data = "apple,banana,orange,grape"
 fruits = data.split(',')
@@ -594,14 +500,10 @@ print(f"Original: {data}")
 print(f"Split: {fruits}")
 print(f"Join with ' | ': {' | '.join(fruits)}")
 
-
-
 # Split on whitespace and lines
 multiline = "Line 1\\nLine 2\\nLine 3"
 lines = multiline.splitlines()
 print(f"Lines: {lines}")
-
-
 
 # 6. STRING REPLACEMENT
 original = "I love Java programming"
@@ -610,40 +512,28 @@ print(f"\\nReplacement:")
 print(f"Original: {original}")
 print(f"Replaced: {replaced}")
 
-
-
 # Multiple replacements
 text_to_fix = "Hello World World"
 fixed = text_to_fix.replace("World", "Python", 1)  # Replace only first occurrence
 print(f"Fixed (first only): {fixed}")
-
-
 
 # 7. STRING FORMATTING (Modern Python)
 name = "Alice"
 age = 28
 salary = 75000.50
 
-
-
 # f-strings (recommended)
 print(f"\\nString Formatting:")
 print(f"Hi, I'm {name}, {age} years old, earning \\$" + "{salary:,.2f}")
-
-
 
 # Format with padding and alignment
 print(f"Name: {name:>10}")  # Right aligned, width 10
 print(f"Age:  {age:>10}")
 print(f"Salary: {salary:>10.2f}")
 
-
-
 # .format() method
 print("Hi, I'm {}, {} years old".format(name, age))
 print("Hi, I'm {name}, {age} years old".format(name=name, age=age))
-
-
 
 # 8. STRING INDEXING AND SLICING
 word = "Python"
@@ -655,8 +545,6 @@ print(f"First 3: {word[:3]}")
 print(f"Last 3: {word[-3:]}")
 print(f"Every 2nd: {word[::2]}")
 print(f"Reversed: {word[::-1]}")
-
-
 
 # 9. ESCAPE CHARACTERS
 escaped = "Line 1\\nLine 2\\tTabbed\\\\Backslash\\"Quote\\""
@@ -702,8 +590,6 @@ print(f"Python is awesome: {is_python_awesome}")
 print(f"Python is difficult: {is_difficult}")
 print(f"Type of True: {type(True)}")
 
-
-
 # 2. BOOLEAN OPERATIONS
 a, b = True, False
 print(f"\\nBoolean Operations:")
@@ -713,26 +599,18 @@ print(f"a or b = {a or b}")
 print(f"not a = {not a}")
 print(f"not b = {not b}")
 
-
-
 # 3. TRUTHINESS TESTING
 print(f"\\nTruthiness Testing:")
-
-
 
 # Falsy values
 falsy_values = [False, None, 0, 0.0, "", [], {}, set()]
 for value in falsy_values:
     print(f"{repr(value):>10} is {'truthy' if value else 'falsy'}")
 
-
-
 # Truthy values
 truthy_values = [True, 1, "hello", [1, 2], {"key": "value"}]
 for value in truthy_values:
     print(f"{repr(value):>15} is {'truthy' if value else 'falsy'}")
-
-
 
 # 4. LOGICAL OPERATORS WITH DIFFERENT TYPES
 print(f"\\nLogical Operators with Mixed Types:")
@@ -740,8 +618,6 @@ print(f"5 and 'hello' = {5 and 'hello'}")  # Returns 'hello' (last truthy)
 print(f"0 and 'hello' = {0 and 'hello'}")  # Returns 0 (first falsy)
 print(f"0 or 'hello' = {0 or 'hello'}")    # Returns 'hello' (first truthy)
 print(f"'' or [] or 'default' = {'' or [] or 'default'}")
-
-
 
 # 5. NONE TYPE
 result = None
@@ -753,19 +629,13 @@ print(f"Type of None: {type(None)}")
 print(f"result is None: {result is None}")
 print(f"result == None: {result == None}")  # Use 'is' instead!
 
-
-
 # Function returning None
 def greet():
     print("Hello!")
-
-
     # No return statement = returns None
 
 returned_value = greet()
 print(f"Function returned: {returned_value}")
-
-
 
 # 6. PRACTICAL BOOLEAN USAGE
 age = 20
@@ -780,8 +650,6 @@ print(f"Age: {age}, Has license: {has_license}, Has car: {has_car}")
 print(f"Can drive: {can_drive}")
 print(f"Should use Uber: {should_uber}")
 
-
-
 # 7. BOOLEAN CONVERSION
 print(f"\\nBoolean Conversion:")
 print(f"bool(1): {bool(1)}")
@@ -791,16 +659,12 @@ print(f"bool(''): {bool('')}")
 print(f"bool([]): {bool([])}")
 print(f"bool([1, 2]): {bool([1, 2])}")
 
-
-
 # 8. CHAINED COMPARISONS
 x = 5
 print(f"\\nChained Comparisons:")
 print(f"1 < {x} < 10: {1 < x < 10}")
 print(f"10 < {x} < 20: {10 < x < 20}")
 print(f"{x} == 5 == 5: {x == 5 == 5}")
-
-
 
 # 9. IDENTITY VS EQUALITY
 list1 = [1, 2, 3]
@@ -811,8 +675,6 @@ print(f"\\nIdentity vs Equality:")
 print(f"list1 == list2: {list1 == list2}")  # Equal values
 print(f"list1 is list2: {list1 is list2}")  # Different objects
 print(f"list1 is list3: {list1 is list3}")  # Same object
-
-
 
 # None should always use 'is'
 value = None
@@ -849,8 +711,6 @@ print("\\n🎯 Boolean and None mastery completed!")`
                 exampleCode: `# 1. BASIC TYPE CONVERSIONS
 print("=== Basic Type Conversions ===")
 
-
-
 # String to numbers
 str_int = "42"
 str_float = "3.14"
@@ -860,8 +720,6 @@ print(f"String '{str_int}' to int: {int(str_int)}")
 print(f"String '{str_float}' to float: {float(str_float)}")
 print(f"String to bool: {bool(str_bool)}")  # Non-empty string = True
 
-
-
 # Numbers to string
 num_int = 100
 num_float = 99.99
@@ -869,20 +727,14 @@ num_float = 99.99
 print(f"Int {num_int} to string: '{str(num_int)}'")
 print(f"Float {num_float} to string: '{str(num_float)}'")
 
-
-
 # Boolean conversions
 print(f"Int 1 to bool: {bool(1)}")
 print(f"Int 0 to bool: {bool(0)}")
 print(f"Bool True to int: {int(True)}")
 print(f"Bool False to int: {int(False)}")
 
-
-
 # 2. ADVANCED CONVERSIONS
 print(f"\\n=== Advanced Conversions ===")
-
-
 
 # List/Tuple/Set conversions
 original_list = [1, 2, 3, 2, 1]
@@ -895,20 +747,14 @@ print(f"To tuple: {converted_tuple}")
 print(f"To set: {converted_set}")
 print(f"Back to list: {back_to_list}")
 
-
-
 # String to list
 text = "hello"
 char_list = list(text)
 print(f"String '{text}' to list: {char_list}")
 
-
-
 # Join list back to string
 joined = ''.join(char_list)
 print(f"List back to string: '{joined}'")
-
-
 
 # 3. TYPE CHECKING
 print(f"\\n=== Type Checking ===")
@@ -917,8 +763,6 @@ values = [42, 3.14, "hello", True, [1, 2, 3], None]
 
 for value in values:
     print(f"{str(value):>10} | type: {type(value).__name__:>10} | isinstance int: {isinstance(value, int)}")
-
-
 
 # Multiple type checking
 def describe_type(value):
@@ -939,8 +783,6 @@ print(f"\\nType Description:")
 for value in values:
     print(f"{str(value):>10} -> {describe_type(value)}")
 
-
-
 # 4. SAFE CONVERSIONS WITH ERROR HANDLING
 print(f"\\n=== Safe Conversions ===")
 
@@ -955,14 +797,10 @@ for value in test_values:
     result = safe_int_conversion(value)
     print(f"Convert {repr(value):>10} to int: {result}")
 
-
-
 # 5. NUMERIC BASE CONVERSIONS
 print(f"\\n=== Base Conversions ===")
 
 number = 255
-
-
 
 # Convert to different bases
 binary = bin(number)
@@ -974,15 +812,11 @@ print(f"  Binary: {binary}")
 print(f"  Octal: {octal}")
 print(f"  Hexadecimal: {hexadecimal}")
 
-
-
 # Convert back to decimal
 print(f"\\nBack to decimal:")
 print(f"  Binary '0b11111111': {int('0b11111111', 2)}")
 print(f"  Octal '0o377': {int('0o377', 8)}")
 print(f"  Hex '0xff': {int('0xff', 16)}")
-
-
 
 # 6. CHECKING ATTRIBUTES AND CAPABILITIES
 print(f"\\n=== Attribute Checking ===")
@@ -1002,8 +836,6 @@ print(f"Object has 'nonexistent': {hasattr(obj, 'nonexistent')}")
 print(f"String has 'upper': {hasattr(test_str, 'upper')}")
 print(f"String has 'nonexistent': {hasattr(test_str, 'nonexistent')}")
 
-
-
 # 7. PRACTICAL EXAMPLE: USER INPUT VALIDATION
 print(f"\\n=== Input Validation Example ===")
 
@@ -1017,8 +849,6 @@ def get_age_from_input(user_input):
             return None, "Age must be between 0 and 150"
     except ValueError:
         return None, f"'{user_input}' is not a valid number"
-
-
 
 # Test different inputs
 test_inputs = ["25", "abc", "150", "-5", "200", "25.5"]
@@ -1072,8 +902,6 @@ print(f"Floor Division: {a} // {b} = {a // b}")
 print(f"Modulus: {a} % {b} = {a % b}")
 print(f"Exponentiation: {a} ** {b} = {a ** b}")
 
-
-
 # 2. MIXED TYPE OPERATIONS
 print(f"\\n=== Mixed Type Operations ===")
 int_num = 10
@@ -1083,8 +911,6 @@ print(f"int + float: {int_num} + {float_num} = {int_num + float_num}")
 print(f"int / int: 10 / 3 = {10 / 3}")
 print(f"int // int: 10 // 3 = {10 // 3}")
 
-
-
 # 3. STRING OPERATIONS
 print(f"\\n=== String Operations ===")
 str1 = "Hello"
@@ -1093,15 +919,11 @@ str2 = "World"
 print(f"Concatenation: '{str1}' + ' ' + '{str2}' = '{str1 + ' ' + str2}'")
 print(f"Repetition: '{str1}' * 3 = '{str1 * 3}'")
 
-
-
 # List operations
 list1 = [1, 2, 3]
 list2 = [4, 5, 6]
 print(f"List concatenation: {list1} + {list2} = {list1 + list2}")
 print(f"List repetition: {list1} * 2 = {list1 * 2}")
-
-
 
 # 4. OPERATOR PRECEDENCE
 print(f"\\n=== Operator Precedence ===")
@@ -1115,12 +937,8 @@ print(f"(2 + 3) * 4 = {result2}")
 print(f"2 ** 3 * 4 = {result3}")
 print(f"2 * 3 ** 2 = {result4}")
 
-
-
 # 5. PRACTICAL EXAMPLES
 print(f"\\n=== Practical Examples ===")
-
-
 
 # Calculate compound interest
 principal = 1000
@@ -1129,8 +947,6 @@ time = 3
 
 compound_interest = principal * (1 + rate) ** time
 print(f"Compound Interest: ${'\\$'}{principal} at {rate*100}% for {time} years = ${'\\$'}{compound_interest:.2f}")
-
-
 
 # Calculate circle area and circumference
 import math
@@ -1142,8 +958,6 @@ print(f"Circle with radius {radius}:")
 print(f"  Area: {area:.2f}")
 print(f"  Circumference: {circumference:.2f}")
 
-
-
 # Time conversion
 total_seconds = 7265
 hours = total_seconds // 3600
@@ -1153,12 +967,8 @@ seconds = total_seconds % 60
 print(f"\\nTime conversion: {total_seconds} seconds")
 print(f"  = {hours} hours, {minutes} minutes, {seconds} seconds")
 
-
-
 # 6. MODULUS PRACTICAL USES
 print(f"\\n=== Modulus Practical Uses ===")
-
-
 
 # Check if number is even or odd
 numbers = [12, 15, 20, 33, 44]
@@ -1167,8 +977,6 @@ for num in numbers:
         print(f"{num} is even")
     else:
         print(f"{num} is odd")
-
-
 
 # Check divisibility
 number = 24
@@ -1218,8 +1026,6 @@ print(f"a > b: {a > b}")
 print(f"a <= b: {a <= b}")
 print(f"a >= b: {a >= b}")
 
-
-
 # 2. STRING COMPARISONS
 print(f"\\n=== String Comparisons ===")
 str1, str2 = "apple", "banana"
@@ -1228,13 +1034,9 @@ print(f"'{str1}' == '{str2}': {str1 == str2}")
 print(f"'{str1}' < '{str2}': {str1 < str2}")  # Lexicographic order
 print(f"'{str1}' > '{str2}': {str1 > str2}")
 
-
-
 # Case sensitivity
 print(f"'Apple' == 'apple': {'Apple' == 'apple'}")
 print(f"'Apple'.lower() == 'apple': {'Apple'.lower() == 'apple'}")
-
-
 
 # 3. CHAINED COMPARISONS
 print(f"\\n=== Chained Comparisons ===")
@@ -1245,8 +1047,6 @@ print(f"10 < x < 20: {10 < x < 20}")
 print(f"10 < x < 15: {10 < x < 15}")
 print(f"15 <= x <= 25: {15 <= x <= 25}")
 
-
-
 # Multiple comparisons
 age = 25
 print(f"\\nAge eligibility (age = {age}):")
@@ -1254,12 +1054,8 @@ print(f"Can vote (18 <= age): {18 <= age}")
 print(f"Adult (18 <= age < 65): {18 <= age < 65}")
 print(f"Senior discount (age >= 65): {age >= 65}")
 
-
-
 # 4. IDENTITY OPERATORS (is vs ==)
 print(f"\\n=== Identity vs Equality ===")
-
-
 
 # Numbers (small integers are cached)
 a = 100
@@ -1275,8 +1071,6 @@ print(f"\\nc = {c}, d = {d}")
 print(f"c == d: {c == d}")
 print(f"c is d: {c is d}")  # Different objects for large numbers
 
-
-
 # Lists
 list1 = [1, 2, 3]
 list2 = [1, 2, 3]
@@ -1288,20 +1082,14 @@ print(f"list1 == list2: {list1 == list2}")  # Same values
 print(f"list1 is list2: {list1 is list2}")  # Different objects
 print(f"list1 is list3: {list1 is list3}")  # Same object
 
-
-
 # None should always use 'is'
 value = None
 print(f"\\nvalue = {value}")
 print(f"value is None: {value is None}")     # Correct way
 print(f"value == None: {value == None}")     # Works but not recommended
 
-
-
 # 5. MEMBERSHIP OPERATORS
 print(f"\\n=== Membership Operators ===")
-
-
 
 # Lists
 fruits = ['apple', 'banana', 'orange']
@@ -1310,16 +1098,12 @@ print(f"'apple' in fruits: {'apple' in fruits}")
 print(f"'grape' in fruits: {'grape' in fruits}")
 print(f"'grape' not in fruits: {'grape' not in fruits}")
 
-
-
 # Strings
 sentence = "Python is awesome"
 print(f"\\nSentence: '{sentence}'")
 print(f"'Python' in sentence: {'Python' in sentence}")
 print(f"'Java' in sentence: {'Java' in sentence}")
 print(f"'is' in sentence: {'is' in sentence}")
-
-
 
 # Dictionaries (checks keys)
 person = {'name': 'Alice', 'age': 30}
@@ -1328,17 +1112,11 @@ print(f"'name' in person: {'name' in person}")
 print(f"'email' in person: {'email' in person}")
 print(f"'Alice' in person: {'Alice' in person}")  # Not in keys!
 
-
-
 # Check values in dictionary
 print(f"'Alice' in person.values(): {'Alice' in person.values()}")
 
-
-
 # 6. PRACTICAL COMPARISON EXAMPLES
 print(f"\\n=== Practical Examples ===")
-
-
 
 # Grade calculator
 def get_letter_grade(score):
@@ -1357,8 +1135,6 @@ scores = [95, 87, 76, 65, 45]
 for score in scores:
     grade = get_letter_grade(score)
     print(f"Score {score}: Grade {grade}")
-
-
 
 # Password validation
 def validate_password(password):
@@ -1410,8 +1186,6 @@ print("📊 Comparison operators mastered!")`
                 exampleCode: `# 1. BASIC LOGICAL OPERATIONS
 print("=== Basic Logical Operations ===")
 
-
-
 # Truth table for AND
 print("AND Truth Table:")
 print(f"True and True = {True and True}")
@@ -1429,8 +1203,6 @@ print(f"\\nNOT Operation:")
 print(f"not True = {not True}")
 print(f"not False = {not False}")
 
-
-
 # 2. PRACTICAL LOGICAL OPERATIONS
 print(f"\\n=== Practical Examples ===")
 
@@ -1438,8 +1210,6 @@ age = 25
 has_license = True
 has_insurance = True
 has_car = False
-
-
 
 # Complex conditions
 can_drive_legally = age >= 18 and has_license and has_insurance
@@ -1454,8 +1224,6 @@ print(f"\\nDecisions:")
 print(f"  Can drive legally: {can_drive_legally}")
 print(f"  Can rent car: {can_rent_car}")
 print(f"  Needs Uber: {needs_uber}")
-
-
 
 # 3. SHORT-CIRCUIT EVALUATION
 print(f"\\n=== Short-Circuit Evaluation ===")
@@ -1480,12 +1248,8 @@ print(f"\\nTesting OR with True first (short-circuit):")
 result = True or expensive_function()  # expensive_function not called
 print(f"Result: {result}")
 
-
-
 # 4. LOGICAL OPERATORS WITH NON-BOOLEAN VALUES
 print(f"\\n=== Logical Operators with Non-Boolean Values ===")
-
-
 
 # 'and' returns first falsy value or last value
 print("AND with non-boolean values:")
@@ -1494,8 +1258,6 @@ print(f"0 and 'hello': {0 and 'hello'}")      # Returns 0 (falsy)
 print(f"'' and 'hello': {'' and 'hello'}")    # Returns '' (falsy)
 print(f"'hi' and 42: {'hi' and 42}")          # Returns 42
 
-
-
 # 'or' returns first truthy value or last value
 print(f"\\nOR with non-boolean values:")
 print(f"5 or 'hello': {5 or 'hello'}")        # Returns 5 (first truthy)
@@ -1503,12 +1265,8 @@ print(f"0 or 'hello': {0 or 'hello'}")        # Returns 'hello' (first truthy)
 print(f"'' or []: {'' or []}")                # Returns [] (last value)
 print(f"None or 0 or 'default': {None or 0 or 'default'}")  # Returns 'default'
 
-
-
 # 5. COMPLEX LOGICAL EXPRESSIONS
 print(f"\\n=== Complex Logical Expressions ===")
-
-
 
 # Weather decision system
 temperature = 75
@@ -1530,12 +1288,8 @@ print(f"  Weekend: {is_weekend}")
 print(f"  Has plans: {has_plans}")
 print(f"  Perfect day for outdoor activities: {perfect_day}")
 
-
-
 # 6. OPERATOR PRECEDENCE
 print(f"\\n=== Operator Precedence ===")
-
-
 
 # not has highest precedence, then and, then or
 a, b, c = True, False, True
@@ -1551,8 +1305,6 @@ print(f"(a or b) and c = {result2}")
 print(f"not a or b = {result3}")
 print(f"not (a or b) = {result4}")
 
-
-
 # 7. PRACTICAL APPLICATION: FORM VALIDATION
 print(f"\\n=== Form Validation Example ===")
 
@@ -1564,8 +1316,6 @@ def validate_user_registration(username, email, password, age, terms_accepted):
     valid_password = password and len(password) >= 8
     valid_age = age is not None and 13 <= age <= 120
     valid_terms = terms_accepted is True
-
-
 
     # All conditions must be true
     is_valid = (
@@ -1585,8 +1335,6 @@ def validate_user_registration(username, email, password, age, terms_accepted):
     print(f"  Overall: {'Valid ✅' if is_valid else 'Invalid ❌'}")
 
     return is_valid
-
-
 
 # Test cases
 test_cases = [
@@ -1632,13 +1380,9 @@ print("🧠 Logical operators mastered!")`
                 exampleCode: `# 1. ASSIGNMENT OPERATORS
 print("=== Assignment Operators ===")
 
-
-
 # Basic assignment
 x = 10
 print(f"Initial x = {x}")
-
-
 
 # Compound assignments
 x += 5    # x = x + 5
@@ -1653,8 +1397,6 @@ print(f"After x *= 2: x = {x}")
 x /= 4    # x = x / 4
 print(f"After x /= 4: x = {x}")
 
-
-
 # More assignment operators
 y = 17
 print(f"\\nStarting with y = {y}")
@@ -1668,20 +1410,14 @@ print(f"After y %= 3: y = {y}")
 y **= 4   # Exponentiation
 print(f"After y **= 4: y = {y}")
 
-
-
 # 2. STRING AND LIST ASSIGNMENT OPERATORS
 print(f"\\n=== String and List Assignment ===")
-
-
 
 # String concatenation
 message = "Hello"
 message += " World"
 message += "!"
 print(f"String concatenation: '{message}'")
-
-
 
 # List extension
 numbers = [1, 2, 3]
@@ -1690,8 +1426,6 @@ print(f"List extension: {numbers}")
 
 numbers *= 2  # Repeat the list
 print(f"List repetition: {numbers}")
-
-
 
 # 3. BITWISE OPERATORS - BASICS
 print(f"\\n=== Bitwise Operators ===")
@@ -1707,8 +1441,6 @@ print(f"a & b (AND): {a & b} (binary: {bin(a & b)})")
 print(f"a | b (OR): {a | b} (binary: {bin(a | b)})")
 print(f"a ^ b (XOR): {a ^ b} (binary: {bin(a ^ b)})")
 print(f"~a (NOT): {~a} (binary: {bin(~a & 0xFF)})")  # Mask to show 8 bits
-
-
 
 # 4. BIT SHIFTING
 print(f"\\n=== Bit Shifting ===")
@@ -1726,26 +1458,18 @@ print(f"\\nShift effects:")
 print(f"Left shift by n ≈ multiply by 2^n: 8 << 2 = 8 * 2^2 = {8 * (2**2)}")
 print(f"Right shift by n ≈ divide by 2^n: 8 >> 1 = 8 / 2^1 = {8 // (2**1)}")
 
-
-
 # 5. PRACTICAL BITWISE APPLICATIONS
 print(f"\\n=== Practical Bitwise Applications ===")
-
-
 
 # Flags and permissions (similar to file permissions)
 READ = 1     # 001
 WRITE = 2    # 010
 EXECUTE = 4  # 100
 
-
-
 # Combine permissions
 permissions = READ | WRITE  # 011 (binary)
 print(f"Permissions: READ={READ}, WRITE={WRITE}, EXECUTE={EXECUTE}")
 print(f"Combined READ|WRITE: {permissions} (binary: {bin(permissions)})")
-
-
 
 # Check permissions
 has_read = bool(permissions & READ)
@@ -1757,24 +1481,16 @@ print(f"Has READ: {has_read}")
 print(f"Has write: {has_write}")
 print(f"Has execute: {has_execute}")
 
-
-
 # Add execute permission
 permissions |= EXECUTE
 print(f"\\nAfter adding EXECUTE: {permissions} (binary: {bin(permissions)})")
-
-
 
 # Remove write permission
 permissions &= ~WRITE  # Use NOT to create mask, then AND
 print(f"After removing WRITE: {permissions} (binary: {bin(permissions)})")
 
-
-
 # 6. TOGGLE AND SWAP TRICKS
 print(f"\\n=== Bitwise Tricks ===")
-
-
 
 # Toggle bits
 value = 5  # 101
@@ -1786,8 +1502,6 @@ print(f"After toggle with {mask}: {toggled} (binary: {bin(toggled)})")
 toggled_back = toggled ^ mask
 print(f"Toggle back: {toggled_back} (binary: {bin(toggled_back)})")
 
-
-
 # XOR swap (without temporary variable)
 x, y = 25, 30
 print(f"\\nXOR swap: x={x}, y={y}")
@@ -1797,8 +1511,6 @@ y = x ^ y
 x = x ^ y
 
 print(f"After XOR swap: x={x}, y={y}")
-
-
 
 # 7. BIT MANIPULATION FUNCTIONS
 print(f"\\n=== Bit Manipulation Functions ===")
@@ -1819,8 +1531,6 @@ def toggle_bit(number, position):
     """Toggle the bit at the specified position."""
     return number ^ (1 << position)
 
-
-
 # Test bit manipulation functions
 test_number = 10  # 1010 in binary
 print(f"Test number: {test_number} (binary: {bin(test_number)})")
@@ -1829,8 +1539,6 @@ for pos in range(4):
     bit = get_bit(test_number, pos)
     print(f"Bit at position {pos}: {bit}")
 
-
-
 # Modify bits
 modified = set_bit(test_number, 0)     # Set bit 0
 modified = clear_bit(modified, 3)      # Clear bit 3
@@ -1838,18 +1546,12 @@ modified = toggle_bit(modified, 2)     # Toggle bit 2
 
 print(f"\\nAfter modifications: {modified} (binary: {bin(modified)})")
 
-
-
 # 8. PERFORMANCE COMPARISON
 print(f"\\n=== Performance Examples ===")
-
-
 
 # Fast check if number is even (bit 0 is 0)
 def is_even_bitwise(n):
     return (n & 1) == 0
-
-
 
 # Fast multiply/divide by powers of 2
 def multiply_by_8(n):
@@ -1904,8 +1606,6 @@ else:
     print("Too young to vote")
     print("Wait until you're 18")
 
-
-
 # 2. IF-ELIF-ELSE CHAIN
 score = 85
 if score >= 90:
@@ -1926,8 +1626,6 @@ else:
 
 print(f"Your grade: {grade}")
 
-
-
 # 3. NESTED CONDITIONS
 weather = "sunny"
 temperature = 75
@@ -1942,14 +1640,10 @@ if weather == "sunny":
 else:
     print("Not sunny today")
 
-
-
 # 4. TERNARY OPERATOR (ONE-LINE IF)
 age = 20
 status = "adult" if age >= 18 else "minor"
 print(f"Status: {status}")
-
-
 
 # Multiple ternary
 x = 10
@@ -1983,13 +1677,9 @@ print("=== For Loops with Range ===")
 for i in range(5):
     print(f"Count: {i}")
 
-
-
 # Range with start, stop, step
 for i in range(2, 10, 2):
     print(f"Even number: {i}")
-
-
 
 # 2. FOR LOOPS WITH SEQUENCES
 print("\\n=== For Loops with Lists ===")
@@ -1997,21 +1687,15 @@ fruits = ["apple", "banana", "orange", "grape"]
 for fruit in fruits:
     print(f"I like {fruit}")
 
-
-
 # With index using enumerate
 for index, fruit in enumerate(fruits):
     print(f"{index}: {fruit}")
-
-
 
 # 3. STRING ITERATION
 print("\\n=== String Iteration ===")
 message = "Python"
 for char in message:
     print(f"Character: {char}")
-
-
 
 # 4. WHILE LOOPS
 print("\\n=== While Loops ===")
@@ -2020,8 +1704,6 @@ while countdown > 0:
     print(f"Countdown: {countdown}")
     countdown -= 1
 print("Blast off! 🚀")
-
-
 
 # 5. LOOP CONTROL STATEMENTS
 print("\\n=== Loop Control ===")
@@ -2032,8 +1714,6 @@ for num in range(1, 11):
         break     # Stop at 8
     print(f"Number: {num}")
 
-
-
 # 6. NESTED LOOPS
 print("\\n=== Nested Loops ===")
 for i in range(1, 4):
@@ -2041,16 +1721,12 @@ for i in range(1, 4):
         print(f"({i},{j})", end=" ")
     print()  # New line
 
-
-
 # 7. LOOP WITH ELSE
 print("\\n=== Loop with Else ===")
 for i in range(5):
     print(i)
 else:
     print("Loop completed normally")
-
-
 
 # Search with break (else won't execute)
 numbers = [1, 2, 3, 4, 5]
@@ -2097,16 +1773,12 @@ mixed = [1, "hello", 3.14, True]
 print(f"Numbers: {numbers}")
 print(f"Mixed: {mixed}")
 
-
-
 # 2. LIST METHODS
 fruits = ["apple", "banana"]
 fruits.append("orange")
 fruits.insert(1, "kiwi")
 fruits.extend(["grape", "mango"])
 print(f"Fruits: {fruits}")
-
-
 
 # 3. LIST COMPREHENSIONS
 squares = [x**2 for x in range(10)]
@@ -2117,8 +1789,6 @@ upper_words = [word.upper() for word in words]
 print(f"Squares: {squares}")
 print(f"Evens: {evens}")
 print(f"Upper words: {upper_words}")
-
-
 
 # 4. ADVANCED LIST OPERATIONS
 numbers = [3, 1, 4, 1, 5, 9, 2, 6]
@@ -2158,8 +1828,6 @@ def greet(name):
 result = greet("Alice")
 print(result)
 
-
-
 # 2. FUNCTION WITH MULTIPLE PARAMETERS
 def calculate_area(length, width, height=1):
     """Calculate area or volume."""
@@ -2172,8 +1840,6 @@ area = calculate_area(10, 5)
 volume = calculate_area(10, 5, 3)
 print(f"Area: {area}, Volume: {volume}")
 
-
-
 # 3. FUNCTION WITH *ARGS AND **KWARGS
 def flexible_function(*args, **kwargs):
     """Demonstrate flexible arguments."""
@@ -2182,13 +1848,9 @@ def flexible_function(*args, **kwargs):
 
 flexible_function(1, 2, 3, name="Python", version=3.9)
 
-
-
 # 4. LAMBDA FUNCTIONS
 square = lambda x: x ** 2
 print(f"Square of 5: {square(5)}")
-
-
 
 # Using with built-in functions
 numbers = [1, 2, 3, 4, 5]
@@ -2226,8 +1888,6 @@ const advancedTopics = [
 class Dog:
     """A simple dog class."""
 
-
-
     # Class attribute (shared by all instances)
     species = "Canis familiaris"
 
@@ -2245,8 +1905,6 @@ class Dog:
         """Get dog information."""
         return f"{self.name} is a {self.age} year old {self.breed}"
 
-
-
 # 2. CREATING OBJECTS
 dog1 = Dog("Buddy", "Golden Retriever", 3)
 dog2 = Dog("Lucy", "Poodle", 5)
@@ -2254,8 +1912,6 @@ dog2 = Dog("Lucy", "Poodle", 5)
 print(dog1.bark())
 print(dog1.get_info())
 print(dog2.get_info())
-
-
 
 # 3. CLASS INHERITANCE
 class ServiceDog(Dog):
