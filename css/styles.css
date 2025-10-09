@@ -859,6 +859,46 @@ header {
     color: #ffffff;
 }
 
+.markdown-editor-container {
+    padding: 1rem 0;
+}
+
+.markdown-editor {
+    width: 100%;
+    min-height: 100px;
+    background-color: #0f3460;
+    color: #ffffff;
+    border: 1px solid #3776ab;
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.markdown-editor:focus {
+    outline: none;
+    border-color: #4a8bc2;
+    box-shadow: 0 0 0 2px rgba(55, 118, 171, 0.2);
+}
+
+.markdown-output-container {
+    padding: 0.5rem 0;
+}
+
+.markdown-rendered {
+    padding: 1rem;
+    background-color: rgba(55, 118, 171, 0.05);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.markdown-rendered:hover {
+    background-color: rgba(55, 118, 171, 0.1);
+}
+
 /* Add cell button enhancement */
 .add-cell-container {
     display: flex;

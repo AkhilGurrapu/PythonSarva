@@ -79,70 +79,32 @@ const pythonConcepts = [
                     finally, for, from, global, if, import, in, is, lambda, nonlocal, not,
                     or, pass, raise, return, try, while, with, yield</code>
                 `,
-                exampleCode: `# 1. BASIC SYNTAX EXAMPLES
-
-
-
-# Variables (no declaration needed!)
-student_name = "John Doe"
-student_age = 20
-student_gpa = 3.8
-
-
-
-# Python is case-sensitive
-Name = "Different variable"
-name = "Another different variable"
-
-print(f"student_name: {student_name}")
-print(f"Name: {Name}")
-print(f"name: {name}")
-
-
-
-# 2. INDENTATION EXAMPLE
-print("\\n=== Indentation Demo ===")
-if student_gpa > 3.5:
-    print("Great job!")  # 4 spaces indentation
-    if student_gpa > 3.8:
-        print("Dean's list!")  # 8 spaces for nested block
-    print("Keep it up!")
-else:
-    print("Study harder!")
-
-
-
-# 3. MULTIPLE ASSIGNMENT
-x, y, z = 10, 20, 30
-print(f"\\nMultiple assignment: x={x}, y={y}, z={z}")
-
-
-
-# Chain assignment
-a = b = c = 100
-print(f"Chain assignment: a={a}, b={b}, c={c}")
-
-
-
-# 4. LINE CONTINUATION
-total = 1 + 2 + 3 + \\
-        4 + 5 + 6
-print(f"\\nLine continuation result: {total}")
-
-
-
-# 5. COMMENTS
-
-
-# Single line comment
-
-"""
-Multi-line comment
-Can span multiple lines
-Great for documentation
-"""
-
-print("\\n🎉 Syntax basics completed!")`
+                codeCells: [
+                    {
+                        type: 'markdown',
+                        content: '# Basic Syntax Examples\nLet\'s explore Python\'s fundamental syntax rules!'
+                    },
+                    {
+                        type: 'code',
+                        content: '# Variables (no declaration needed!)\nstudent_name = "John Doe"\nstudent_age = 20\nstudent_gpa = 3.8\nprint(f"Student: {student_name}, Age: {student_age}, GPA: {student_gpa}")'
+                    },
+                    {
+                        type: 'markdown',
+                        content: '## Case Sensitivity\nPython is **case-sensitive**, meaning `Name` and `name` are different variables.'
+                    },
+                    {
+                        type: 'code',
+                        content: 'Name = "Different variable"\nname = "Another different variable"\nprint(f"Name: {Name}")\nprint(f"name: {name}")'
+                    },
+                    {
+                        type: 'markdown',
+                        content: '### Indentation Example\nPython uses indentation (4 spaces) to define code blocks.'
+                    },
+                    {
+                        type: 'code',
+                        content: 'student_gpa = 3.9\nif student_gpa > 3.5:\n    print("Great job!")  # 4 spaces\n    if student_gpa > 3.8:\n        print("Dean\'s list!")  # 8 spaces for nested\nelse:\n    print("Study harder!")'
+                    }
+                ]
             },
             {
                 title: "Comments & Documentation",

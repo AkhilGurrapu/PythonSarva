@@ -16,7 +16,8 @@ class NotebookInterface {
     }
 
     setupEventListeners() {
-        document.getElementById('add-cell').addEventListener('click', () => this.addCell());
+        document.getElementById('add-code-cell').addEventListener('click', () => this.addCell('', 'code'));
+        document.getElementById('add-markdown-cell').addEventListener('click', () => this.addCell('# Enter markdown here', 'markdown'));
         document.getElementById('run-all').addEventListener('click', () => this.runAllCells());
         document.getElementById('clear-output').addEventListener('click', () => this.clearAllOutput());
         document.getElementById('export-notebook').addEventListener('click', () => this.exportNotebook());
@@ -171,7 +172,8 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
             output: '',
             error: null,
             isRunning: false,
-            executionCount: null
+            executionCount: null,
+            isEditing: cellType === 'markdown' ? true : false // Markdown cells start in edit mode
         };
 
         this.cells.push(cell);
@@ -219,9 +221,13 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
         cellElement.dataset.cellId = cell.id;
 
         if (cell.type === 'markdown') {
-            // Render markdown cell
+            // Render markdown cell (similar to code cell but renders markdown)
+            const isEditing = cell.isEditing || false;
             cellElement.innerHTML = `
                 <div class="cell-controls">
+                    <button class="cell-btn run-cell" title="Render Markdown (Ctrl+Enter)">
+                        <i class="fas fa-play"></i> Run
+                    </button>
                     <button class="cell-btn delete-cell" title="Delete Cell (Ctrl+D)">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -232,7 +238,16 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
                         <i class="fas fa-arrow-down"></i>
                     </button>
                 </div>
-                <div class="markdown-content">${this.renderMarkdown(cell.code)}</div>
+                <div class="cell-header">
+                    <span class="cell-label"><i class="fas fa-heading" style="color: #4a8bc2;"></i> Markdown [${cell.executionCount || ' '}]:</span>
+                    <div class="execution-status"></div>
+                </div>
+                <div class="cell-input" style="display: ${isEditing ? 'block' : 'none'}">
+                    <textarea class="cell-editor markdown-editor" id="editor-${cell.id}" placeholder="# Enter markdown here...">${cell.code}</textarea>
+                </div>
+                <div class="markdown-output-container" style="display: ${isEditing ? 'none' : 'block'}">
+                    <div class="markdown-rendered">${this.renderMarkdown(cell.code)}</div>
+                </div>
             `;
         } else {
             // Render code cell
@@ -252,7 +267,7 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
                     </button>
                 </div>
                 <div class="cell-header">
-                    <span class="cell-label">In [${cell.executionCount || ' '}]:</span>
+                    <span class="cell-label"><i class="fas fa-code" style="color: #ffd700;"></i> Code [${cell.executionCount || ' '}]:</span>
                     <div class="execution-status"></div>
                 </div>
                 <div class="cell-input">
@@ -275,12 +290,23 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
     }
 
     setupCellEventListeners(cellElement, cell) {
-        // Run cell (only for code cells)
+        // Run cell (for both code and markdown cells)
         const runBtn = cellElement.querySelector('.run-cell');
         if (runBtn) {
             runBtn.addEventListener('click', () => {
                 this.runCell(cell);
             });
+        }
+
+        // Double-click to edit markdown cells
+        if (cell.type === 'markdown') {
+            const markdownOutput = cellElement.querySelector('.markdown-rendered');
+            if (markdownOutput) {
+                markdownOutput.addEventListener('dblclick', () => {
+                    cell.isEditing = true;
+                    this.rerenderCell(cell);
+                });
+            }
         }
 
         // Delete cell
@@ -298,32 +324,34 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
             this.moveCellDown(cell);
         });
 
-        // Auto-resize textarea
+        // Auto-resize textarea and keyboard shortcuts (for both code and markdown cells)
         const textarea = cellElement.querySelector('.cell-editor');
-        textarea.addEventListener('input', (e) => {
-            cell.code = e.target.value;
-            this.autoResizeTextarea(e.target);
-        });
+        if (textarea) {
+            textarea.addEventListener('input', (e) => {
+                cell.code = e.target.value;
+                this.autoResizeTextarea(e.target);
+            });
 
-        // Keyboard shortcuts
-        textarea.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                if (e.key === 'Enter') {
+            // Keyboard shortcuts
+            textarea.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.runCell(cell);
+                    } else if (e.key === 'd') {
+                        e.preventDefault();
+                        this.deleteCell(cell);
+                    }
+                } else if (e.shiftKey && e.key === 'Enter') {
                     e.preventDefault();
                     this.runCell(cell);
-                } else if (e.key === 'd') {
-                    e.preventDefault();
-                    this.deleteCell(cell);
+                    this.addCell('', cell.type); // Add same type of cell
                 }
-            } else if (e.shiftKey && e.key === 'Enter') {
-                e.preventDefault();
-                this.runCell(cell);
-                this.addCell();
-            }
-        });
+            });
 
-        // Initial resize
-        this.autoResizeTextarea(textarea);
+            // Initial resize
+            this.autoResizeTextarea(textarea);
+        }
     }
 
     setupCodeEditor(cellElement, cell) {
@@ -362,6 +390,53 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
         });
     }
 
+    runMarkdownCell(cell, cellElement) {
+        // Save the current code from the editor
+        const editor = cellElement.querySelector('.markdown-editor');
+        if (editor) {
+            cell.code = editor.value;
+        }
+
+        // Mark as rendered (not editing)
+        cell.isEditing = false;
+
+        // Increment execution count
+        if (!cell.executionCount) {
+            cell.executionCount = this.cells.filter(c => c.executionCount).length + 1;
+        }
+
+        // Show status
+        const statusElement = cellElement.querySelector('.execution-status');
+        statusElement.innerHTML = '<i class="fas fa-check"></i> Rendered';
+        statusElement.className = 'execution-status success';
+        cellElement.classList.add('success');
+
+        // Re-render the cell
+        this.rerenderCell(cell);
+
+        // Clear status after 2 seconds
+        setTimeout(() => {
+            const currentCellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+            if (currentCellElement) {
+                const currentStatus = currentCellElement.querySelector('.execution-status');
+                if (currentStatus) {
+                    currentStatus.innerHTML = '';
+                    currentStatus.className = 'execution-status';
+                }
+                currentCellElement.classList.remove('success');
+            }
+        }, 2000);
+    }
+
+    rerenderCell(cell) {
+        const cellElement = document.querySelector(`[data-cell-id="${cell.id}"]`);
+        if (cellElement) {
+            const parent = cellElement.parentNode;
+            const newElement = this.renderCell(cell);
+            parent.replaceChild(newElement, cellElement);
+        }
+    }
+
     autoResizeTextarea(textarea) {
         textarea.style.height = 'auto';
         const newHeight = Math.max(100, Math.min(textarea.scrollHeight, 500));
@@ -383,7 +458,13 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
             console.error(`❌ Cell element not found for cell ID: ${cell.id}`);
             return;
         }
-        
+
+        // Handle markdown cells differently
+        if (cell.type === 'markdown') {
+            this.runMarkdownCell(cell, cellElement);
+            return;
+        }
+
         const statusElement = cellElement.querySelector('.execution-status');
         const outputContainer = cellElement.querySelector('.cell-output-container');
         const outputElement = cellElement.querySelector('.cell-output');
