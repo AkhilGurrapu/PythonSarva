@@ -794,6 +794,71 @@ header {
     border-left: 3px solid #ff6b6b;
 }
 
+/* Markdown cells */
+.notebook-cell.markdown-cell {
+    background-color: rgba(55, 118, 171, 0.03);
+    border-left: 3px solid #3776ab;
+}
+
+.markdown-content {
+    padding: 1rem 0;
+    line-height: 1.6;
+}
+
+.markdown-content h1 {
+    color: #ffd700;
+    font-size: 1.8rem;
+    margin: 1rem 0 0.75rem 0;
+    border-bottom: 2px solid #3776ab;
+    padding-bottom: 0.5rem;
+}
+
+.markdown-content h2 {
+    color: #4a8bc2;
+    font-size: 1.5rem;
+    margin: 0.75rem 0 0.5rem 0;
+}
+
+.markdown-content h3 {
+    color: #6ba3d4;
+    font-size: 1.2rem;
+    margin: 0.5rem 0 0.4rem 0;
+}
+
+.markdown-content strong {
+    color: #ffd700;
+    font-weight: 600;
+}
+
+.markdown-content em {
+    color: #4a8bc2;
+    font-style: italic;
+}
+
+.markdown-content code {
+    background-color: rgba(55, 118, 171, 0.2);
+    color: #ffd700;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.markdown-content pre {
+    background-color: rgba(15, 52, 96, 0.5);
+    border: 1px solid #3776ab;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+}
+
+.markdown-content pre code {
+    background: none;
+    padding: 0;
+    color: #ffffff;
+}
+
 /* Add cell button enhancement */
 .add-cell-container {
     display: flex;

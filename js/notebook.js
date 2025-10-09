@@ -67,13 +67,12 @@ class NotebookInterface {
                         console.log('📋 Loading codeCells array:', currentSubConcept.codeCells.length, 'cells');
                         currentSubConcept.codeCells.forEach((cell, index) => {
                             if (cell.type === 'markdown') {
-                                // Add markdown as a comment cell
-                                const markdownCode = `# ${cell.content.replace(/\n/g, '\n# ')}`;
+                                // Add as proper markdown cell
                                 console.log(`➕ Adding markdown cell ${index + 1}`);
-                                this.addCell(markdownCode);
+                                this.addCell(cell.content.trim(), 'markdown');
                             } else if (cell.type === 'code') {
                                 console.log(`➕ Adding code cell ${index + 1}`);
-                                this.addCell(cell.content.trim());
+                                this.addCell(cell.content.trim(), 'code');
                             }
                         });
                     }
@@ -163,10 +162,11 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
     }
 
 
-    addCell(initialCode = '') {
+    addCell(initialCode = '', cellType = 'code') {
         const cellId = `cell-${++this.cellCounter}`;
         const cell = {
             id: cellId,
+            type: cellType, // 'code' or 'markdown'
             code: initialCode,
             output: '',
             error: null,
@@ -192,51 +192,96 @@ print("Navigate through concepts on the left to see relevant examples here!")`);
         return cell;
     }
 
+    renderMarkdown(markdown) {
+        // Simple markdown renderer for common patterns
+        let html = markdown
+            // Headers
+            .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+            .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+            .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+            // Bold
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            // Italic
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            // Code inline
+            .replace(/`(.*?)`/g, '<code>$1</code>')
+            // Code blocks
+            .replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>')
+            // Line breaks
+            .replace(/\n/g, '<br>');
+
+        return html;
+    }
+
     renderCell(cell) {
         const cellElement = document.createElement('div');
-        cellElement.className = 'notebook-cell';
+        cellElement.className = `notebook-cell ${cell.type === 'markdown' ? 'markdown-cell' : 'code-cell'}`;
         cellElement.dataset.cellId = cell.id;
 
-        cellElement.innerHTML = `
-            <div class="cell-controls">
-                <button class="cell-btn run-cell" title="Run Cell (Ctrl+Enter)">
-                    <i class="fas fa-play"></i> Run
-                </button>
-                <button class="cell-btn delete-cell" title="Delete Cell (Ctrl+D)">
-                    <i class="fas fa-trash"></i>
-                </button>
-                <button class="cell-btn move-up" title="Move Up">
-                    <i class="fas fa-arrow-up"></i>
-                </button>
-                <button class="cell-btn move-down" title="Move Down">
-                    <i class="fas fa-arrow-down"></i>
-                </button>
-            </div>
-            <div class="cell-header">
-                <span class="cell-label">In [${cell.executionCount || ' '}]:</span>
-                <div class="execution-status"></div>
-            </div>
-            <div class="cell-input">
-                <textarea class="cell-editor" id="editor-${cell.id}" name="code-${cell.id}" placeholder="# Write your Python code here...">${cell.code}</textarea>
-            </div>
-            <div class="cell-output-container" style="display: ${cell.output || cell.error ? 'block' : 'none'}">
-                <div class="cell-output-label">Out [${cell.executionCount || ' '}]:</div>
-                <div class="cell-output ${cell.error ? 'error' : ''}">${this.formatOutput(cell.output || cell.error || '')}</div>
-            </div>
-        `;
+        if (cell.type === 'markdown') {
+            // Render markdown cell
+            cellElement.innerHTML = `
+                <div class="cell-controls">
+                    <button class="cell-btn delete-cell" title="Delete Cell (Ctrl+D)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="cell-btn move-up" title="Move Up">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="cell-btn move-down" title="Move Down">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="markdown-content">${this.renderMarkdown(cell.code)}</div>
+            `;
+        } else {
+            // Render code cell
+            cellElement.innerHTML = `
+                <div class="cell-controls">
+                    <button class="cell-btn run-cell" title="Run Cell (Ctrl+Enter)">
+                        <i class="fas fa-play"></i> Run
+                    </button>
+                    <button class="cell-btn delete-cell" title="Delete Cell (Ctrl+D)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="cell-btn move-up" title="Move Up">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="cell-btn move-down" title="Move Down">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="cell-header">
+                    <span class="cell-label">In [${cell.executionCount || ' '}]:</span>
+                    <div class="execution-status"></div>
+                </div>
+                <div class="cell-input">
+                    <textarea class="cell-editor" id="editor-${cell.id}" name="code-${cell.id}" placeholder="# Write your Python code here...">${cell.code}</textarea>
+                </div>
+                <div class="cell-output-container" style="display: ${cell.output || cell.error ? 'block' : 'none'}">
+                    <div class="cell-output-label">Out [${cell.executionCount || ' '}]:</div>
+                    <div class="cell-output ${cell.error ? 'error' : ''}">${this.formatOutput(cell.output || cell.error || '')}</div>
+                </div>
+            `;
+        }
 
         this.container.appendChild(cellElement);
         this.setupCellEventListeners(cellElement, cell);
-        this.setupCodeEditor(cellElement, cell);
+        if (cell.type === 'code') {
+            this.setupCodeEditor(cellElement, cell);
+        }
 
         return cellElement;
     }
 
     setupCellEventListeners(cellElement, cell) {
-        // Run cell
-        cellElement.querySelector('.run-cell').addEventListener('click', () => {
-            this.runCell(cell);
-        });
+        // Run cell (only for code cells)
+        const runBtn = cellElement.querySelector('.run-cell');
+        if (runBtn) {
+            runBtn.addEventListener('click', () => {
+                this.runCell(cell);
+            });
+        }
 
         // Delete cell
         cellElement.querySelector('.delete-cell').addEventListener('click', () => {

@@ -30,26 +30,32 @@ const pythonConcepts = [
                         <li>🎮 <strong>Game Development:</strong> Pygame, Panda3D</li>
                     </ul>
                 `,
-                exampleCode: `# Step 1: Your First Python Program
-print("Hello, Python World! 🐍")
-print("Welcome to your programming journey!")
-
-
-# Step 2: Using Variables  
-message = "Python is awesome!"
-print(f"Message: {message}")
-
-
-# Step 3: Different Data Types
-name = "Alice"
-age = 25
-height = 5.6
-is_programmer = True
-
-print(f"Name: {name}")
-print(f"Age: {age}")
-print(f"Height: {height}ft")
-print(f"Is programmer: {is_programmer}")`
+                codeCells: [
+                    {
+                        type: 'markdown',
+                        content: '# Step 1: Your First Python Program\nLet\'s start with the classic "Hello World" program!'
+                    },
+                    {
+                        type: 'code',
+                        content: 'print("Hello, Python World! 🐍")\nprint("Welcome to your programming journey!")'
+                    },
+                    {
+                        type: 'markdown',
+                        content: '## Step 2: Using Variables\nVariables store data that we can use later in our program.'
+                    },
+                    {
+                        type: 'code',
+                        content: 'message = "Python is awesome!"\nprint(f"Message: {message}")'
+                    },
+                    {
+                        type: 'markdown',
+                        content: '### Step 3: Different Data Types\nPython supports various data types: **strings**, **integers**, **floats**, and **booleans**.'
+                    },
+                    {
+                        type: 'code',
+                        content: 'name = "Alice"\nage = 25\nheight = 5.6\nis_programmer = True\n\nprint(f"Name: {name}")\nprint(f"Age: {age}")\nprint(f"Height: {height}ft")\nprint(f"Is programmer: {is_programmer}")'
+                    }
+                ]
             },
             {
                 title: "Python Syntax & REPL",
